@@ -377,6 +377,7 @@ if(BUILD_TESTING)
 endif()
 
 add_subdirectory(src/ConvertInputFormat)
+add_subdirectory(src/EPMacro)
 
 if(BUILD_FORTRAN)
   include(CMakeAddFortranSubdirectory)
