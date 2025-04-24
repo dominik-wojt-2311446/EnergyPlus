@@ -34,5 +34,13 @@ if(BUILD_TESTING)
       --epmacro-exe $<TARGET_FILE:EPMacro> #
       --input-dir "${PROJECT_SOURCE_DIR}/tests/simple" #
       --output-dir "${TEST_DIR}/simple")
+  
+  add_test(
+    NAME EPMacro.include
+    COMMAND
+      "${Python_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/test_EPMacro.py" #
+      --epmacro-exe $<TARGET_FILE:EPMacro> #
+      --input-dir "${PROJECT_SOURCE_DIR}/tests/include" #
+      --output-dir "${TEST_DIR}/include")
 
 endif()

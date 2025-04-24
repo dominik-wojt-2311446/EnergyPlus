@@ -1,0 +1,66 @@
+
+
+ ****************************** EPMacro processing begun.
+
+
+ KRDRD  --> kardi1=   1  KARDI2= 501 KARDX= 502  mTxtP=     0  mStk=     0
+      *   1 * in.cmf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            in.cmf,1 
+ KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=     0
+      #   2 # ##include b.imf
+ 1    *   1 * b.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=     0
+ file : in.imf
+      #   3 # ##fileprefix b/
+      #   4 # ##include b.imf
+ file : b/b.imf
+ 1    *   1 * b/b.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  10  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b/b.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  10 KARDX=  11  mTxtP=     0  mStk=     0
+ 1    #   2 # ##include c.imf
+ file : b/c.imf
+ 2    *   1 * b/c.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  10  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b/c.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  10 KARDX=  11  mTxtP=     0  mStk=     0
+ file : b/b.imf
+ file : in.imf
+      #   5 # ##fileprefix
+      #   6 # ##include b.imf
+ file :   b.imf
+ 1    *   1 * b.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=     0
+ file : in.imf
+      #   7 # ##include b/b.imf
+ file :   b/b.imf
+ 1    *   1 * b/b.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  10  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b/b.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  10 KARDX=  11  mTxtP=     0  mStk=     0
+ 1    #   2 # ##include c.imf
+ file :   c.imf
+ 2    *   1 * c.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            c.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=     0
+ file :   b/b.imf
+ file : in.imf
+
+
+ ****************************** EPMacro processing terminated.
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  12  KARDX=   1  KRDNUM=   7 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ..  END ..  

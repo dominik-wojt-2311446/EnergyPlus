@@ -135,11 +135,15 @@ def run_epmacro(epmacro_exe: Path, input_dir: Path, output_dir: Path):
             f"reference_input_path '{reference_audit_path}' is not a valid file"
         )
 
-    temporary_input_path = output_dir.joinpath(INPUT_FILE_NAME)
+    for reference_input_path in input_dir.rglob("*.imf"):
+        temporary_input_path = output_dir.joinpath(
+            reference_input_path.relative_to(input_dir)
+        )
+        temporary_input_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(reference_input_path, temporary_input_path)
+
     temporary_output_path = output_dir.joinpath(OUTPUT_FILE_NAME)
     temporary_audit_path = output_dir.joinpath(AUDIT_FILE_NAME)
-
-    shutil.copy(reference_input_path, temporary_input_path)
 
     full_command_args = [epmacro_exe]
     command_as_strings = [str(x) for x in full_command_args]

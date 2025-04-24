@@ -45,32 +45,92 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "fmt/core.h"
 #include <fmt/format.h>
 
 #include <filesystem>
 #include <fstream>
+#include <map>
 #include <stdexcept>
 #include <string_view>
+#include <vector>
 
 constexpr std::string_view input_file_name = "in.imf";
 constexpr std::string_view output_file_name = "out.idf";
 constexpr std::string_view audit_file_name = "audit.out";
+constexpr std::string_view white_space = " \t";
+
+struct macro_definition
+{
+    std::vector<std::string> arguments;
+    std::vector<std::string> tokens;
+};
+
+struct file_pointer
+{
+    std::filesystem::path file;
+    std::size_t line_number;
+};
+
+struct state
+{
+    std::vector<file_pointer> file_stack;
+    std::filesystem::path prefix;
+    std::map<std::string, macro_definition> macros;
+};
+
+bool starts_with(const std::string_view a, const std::string_view b)
+{
+    std::string_view a_start{a.begin(), std::min(a.length(), b.length())};
+    return a_start == b;
+}
+
+std::string_view strip_ws(const std::string_view text)
+{
+    const auto begin = text.find_first_not_of(white_space);
+    if (begin == std::string_view::npos) return {};
+    const auto end = text.find_last_not_of(white_space) + 1;
+    return {text.begin() + begin, end - begin};
+}
+
+void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0)
+{
+    state_0.file_stack.push_back({path, 1});
+
+    std::ifstream in{path};
+    if (!in.is_open()) throw std::runtime_error(fmt::format("Could not open input file {}", path.string()));
+
+    for (std::string line; std::getline(in, line);) {
+        audit << fmt::format("{}:{} >> {}\n", state_0.file_stack.back().file.string(), state_0.file_stack.back().line_number, line);
+
+        constexpr std::string_view include_directive = "##include";
+        constexpr std::string_view prefix_directive = "##fileprefix";
+        if (starts_with(line, include_directive)) {
+            std::string_view included_file{strip_ws(line.substr(include_directive.length()))};
+            process_file(state_0.prefix / included_file, out, audit, state_0);
+        } else if (starts_with(line, prefix_directive)) {
+            std::string_view prefix{strip_ws(line.substr(prefix_directive.length()))};
+            state_0.prefix = prefix;
+        } else {
+            out << line << '\n';
+            audit << fmt::format("{} << {}\n", output_file_name, line);
+        }
+        ++state_0.file_stack.back().line_number;
+    }
+    state_0.file_stack.pop_back();
+}
 
 int main(const int argc, const char *const argv[])
 {
-    std::ifstream in{std::filesystem::path{input_file_name}};
-    if (!in.is_open()) throw std::runtime_error(fmt::format("Could not open input file {}", input_file_name));
-
     std::ofstream out{std::filesystem::path{output_file_name}};
     if (!out.is_open()) throw std::runtime_error(fmt::format("Could not open output file {}", output_file_name));
 
     std::ofstream audit{std::filesystem::path{audit_file_name}};
     if (!audit.is_open()) throw std::runtime_error(fmt::format("Could not open input file {}", audit_file_name));
 
-    for (std::string line; std::getline(in, line);) {
-        out << line << '\n';
-        audit << line << '\n';;
-    }
+    state state_0;
+
+    process_file(input_file_name, out, audit, state_0);
 
     return 0;
 }
