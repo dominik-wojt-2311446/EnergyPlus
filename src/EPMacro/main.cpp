@@ -45,7 +45,32 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include <fmt/format.h>
+
+#include <filesystem>
+#include <fstream>
+#include <stdexcept>
+#include <string_view>
+
+constexpr std::string_view input_file_name = "in.imf";
+constexpr std::string_view output_file_name = "out.idf";
+constexpr std::string_view audit_file_name = "audit.out";
+
 int main(const int argc, const char *const argv[])
 {
+    std::ifstream in{std::filesystem::path{input_file_name}};
+    if (!in.is_open()) throw std::runtime_error(fmt::format("Could not open input file {}", input_file_name));
+
+    std::ofstream out{std::filesystem::path{output_file_name}};
+    if (!out.is_open()) throw std::runtime_error(fmt::format("Could not open output file {}", output_file_name));
+
+    std::ofstream audit{std::filesystem::path{audit_file_name}};
+    if (!audit.is_open()) throw std::runtime_error(fmt::format("Could not open input file {}", audit_file_name));
+
+    for (std::string line; std::getline(in, line);) {
+        out << line << '\n';
+        audit << line << '\n';;
+    }
+
     return 0;
 }
