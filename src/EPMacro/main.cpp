@@ -46,11 +46,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "fmt/core.h"
+#include <cstddef>
 #include <fmt/format.h>
 
 #include <filesystem>
 #include <fstream>
 #include <map>
+#include <optional>
 #include <stdexcept>
 #include <string_view>
 #include <vector>
@@ -59,6 +61,12 @@ constexpr std::string_view input_file_name = "in.imf";
 constexpr std::string_view output_file_name = "out.idf";
 constexpr std::string_view audit_file_name = "audit.out";
 constexpr std::string_view white_space = " \t";
+
+constexpr std::string_view directive_marker{"##"};
+constexpr std::string_view include_directive = "include";
+constexpr std::string_view includesilent_directive = "includesilent";
+constexpr std::string_view fileprefix_directive = "fileprefix";
+constexpr std::string_view nosilent_directive = "nosilent";
 
 struct macro_definition
 {
@@ -93,6 +101,24 @@ std::string_view strip_ws(const std::string_view text)
     return {text.begin() + begin, end - begin};
 }
 
+std::optional<std::tuple<std::string_view, std::string_view>> parse_directive(const std::string_view line)
+{
+    std::string_view remaining{line};
+    if (!starts_with(remaining, directive_marker)) {
+        return {};
+    }
+
+    remaining = remaining.substr(directive_marker.length());
+    const std::size_t directive_end = remaining.find_first_of(white_space);
+    const std::string_view directive{remaining.substr(0, directive_end)};
+    if (directive.empty()) throw std::runtime_error("Empty directive!");
+
+    remaining = remaining.substr(directive.length());
+    const std::size_t next_begin = remaining.find_first_not_of(white_space);
+    const std::string_view past_directive{next_begin == std::string_view::npos ? std::string_view{} : remaining.substr(next_begin)};
+    return {{directive, past_directive}};
+}
+
 void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0)
 {
     state_0.file_stack.push_back({path, 1});
@@ -102,15 +128,20 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
 
     for (std::string line; std::getline(in, line);) {
         audit << fmt::format("{}:{} >> {}\n", state_0.file_stack.back().file.string(), state_0.file_stack.back().line_number, line);
-
-        constexpr std::string_view include_directive = "##include";
-        constexpr std::string_view prefix_directive = "##fileprefix";
-        if (starts_with(line, include_directive)) {
-            std::string_view included_file{strip_ws(line.substr(include_directive.length()))};
-            process_file(state_0.prefix / included_file, out, audit, state_0);
-        } else if (starts_with(line, prefix_directive)) {
-            std::string_view prefix{strip_ws(line.substr(prefix_directive.length()))};
-            state_0.prefix = prefix;
+        const auto parsed_directive = parse_directive(line);
+        if (parsed_directive.has_value()) {
+            const auto [directive, past_directive] = *parsed_directive;
+            if (directive == include_directive || directive == includesilent_directive) {
+                std::string_view included_file{strip_ws(past_directive)};
+                process_file(state_0.prefix / included_file, out, audit, state_0);
+            } else if (directive == fileprefix_directive) {
+                std::string_view prefix{strip_ws(past_directive)};
+                state_0.prefix = prefix;
+            } else if (directive == nosilent_directive) {
+                /* Just ignore */
+            } else {
+                throw std::runtime_error{fmt::format("Unknown directive {}", directive)};
+            }
         } else {
             out << line << '\n';
             audit << fmt::format("{} << {}\n", output_file_name, line);

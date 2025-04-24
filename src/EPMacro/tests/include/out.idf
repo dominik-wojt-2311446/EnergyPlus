@@ -1,7 +1,11 @@
-in.cmf,1
+! in.cmf,1
 b.imf,1
 b/b.imf,1
 b/c.imf,1
 b.imf,1
 b/b.imf,1
 c.imf,1
+!silent include
+b.imf,1
+!silent include after ##nosilent
+b.imf,1

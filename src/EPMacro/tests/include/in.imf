@@ -1,7 +1,12 @@
-in.cmf,1
+! in.cmf,1
 ##include b.imf
 ##fileprefix b/
 ##include b.imf
 ##fileprefix
 ##include b.imf
 ##include b/b.imf
+!silent include
+##includesilent b.imf
+##nosilent
+!silent include after ##nosilent
+##includesilent b.imf
