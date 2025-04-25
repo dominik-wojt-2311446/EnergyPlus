@@ -1,16 +1,8 @@
 !!!! ifdef ifndef
 !
-!##ifdef defined_with_set1
-!! defined defined_with_set1
-!##else
-!! Error: defined_with_set1 should be defined
-!##endif
+! defined defined_with_set1
 !
-!##ifdef not_defined
-!! Error: not_defined should not be defined
-!##else
-!! not defined not_defined
-!##endif
+! not defined not_defined
 !
 !##ifndef defined_with_set1
 !! defined defined_with_set1

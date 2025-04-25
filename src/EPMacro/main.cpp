@@ -54,6 +54,7 @@
 #include <fstream>
 #include <iterator>
 #include <map>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -89,11 +90,18 @@ struct file_pointer
     std::size_t line_number;
 };
 
+struct if_state
+{
+    bool true_case_active{false};
+    bool true_case_found{false};
+};
+
 struct state
 {
     std::vector<file_pointer> file_stack;
     std::filesystem::path prefix;
     std::map<std::string, macro_definition> macros;
+    std::vector<if_state> if_states;
 };
 
 bool starts_with(const std::string_view a, const std::string_view b)
@@ -213,31 +221,58 @@ vector_sv read_argument_list(const vector_sv::const_iterator begin, const vector
     return result;
 }
 
-void process_set1(const vector_sv &split_line_0, state &state_0)
+std::optional<std::tuple<vector_sv::const_iterator, std::string_view>> read_directive(const vector_sv::const_iterator begin,
+                                                                                      vector_sv::const_iterator end)
 {
-    const auto end = split_line_0.end();
-    const auto hash_hash_iter = find_non_ws(split_line_0.begin(), end);
-    const auto set1_iter = next_non_ws(hash_hash_iter, end);
-    if (set1_iter == end || *hash_hash_iter != "##" || *set1_iter != set1_directive) {
-        throw std::runtime_error("No set1 directive found");
+    const auto hash_hash_iter = find_non_ws(begin, end);
+    if (hash_hash_iter == end || *hash_hash_iter != "##") return {};
+    const auto directive_iter = next_non_ws(hash_hash_iter, end);
+    if (directive_iter == end) {
+        throw std::runtime_error("No directive found after ##");
     }
-    const auto identifier_iter = next_non_ws(set1_iter, end);
-    if (set1_iter == end || *hash_hash_iter != "##" || *set1_iter != set1_directive) {
+    return {{next_non_ws(directive_iter, end), *directive_iter}};
+}
+
+void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0);
+
+void process_include(
+    const vector_sv::const_iterator begin, const vector_sv::const_iterator end, std::ofstream &out, std::ofstream &audit, state &state_0)
+{
+    const auto file_name_iter = find_non_ws(begin, end);
+    if (file_name_iter == end) {
+        throw std::runtime_error(fmt::format("Missing argument for include"));
+    }
+    const std::string_view file_name{*file_name_iter};
+    process_file(state_0.prefix / file_name, out, audit, state_0);
+}
+
+void process_fileprefix(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
+{
+    const auto fileprefix_iter = find_non_ws(begin, end);
+    const std::string_view fileprefix{fileprefix_iter != end ? *fileprefix_iter : std::string_view{}};
+    state_0.prefix = fileprefix;
+}
+
+void process_set1(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
+{
+    auto current_iter = begin;
+    if (current_iter == end) {
         throw std::runtime_error("No identifier for set1 found");
     }
+    const auto identifier_iter = current_iter;
     const auto identifier = *identifier_iter;
 
     macro_definition md;
-    auto current_iter = next_non_ws(identifier_iter, end);
+    current_iter = next_non_ws(current_iter, end);
     if (current_iter != end && get_character_category(*current_iter) == character_category::left_square_bracket) {
         const auto left_bracket_iter = current_iter;
-        const auto right_bracket_iter = std::find_if(left_bracket_iter, end, [](const auto s) { //
+        const auto right_bracket_iter = std::find_if(std::next(left_bracket_iter), end, [](const auto s) { //
             return get_character_category(s) == character_category::right_square_bracket;
         });
         if (right_bracket_iter == end) {
             throw std::runtime_error("No matching ] found for open [");
         }
-        const vector_sv arugment_list = read_argument_list(left_bracket_iter + 1, right_bracket_iter);
+        const vector_sv arugment_list = read_argument_list(std::next(left_bracket_iter), right_bracket_iter);
         std::transform(arugment_list.begin(), arugment_list.end(), std::back_inserter(md.arguments), [](const auto s) { //
             return std::string{s};
         });
@@ -253,6 +288,41 @@ void process_set1(const vector_sv &split_line_0, state &state_0)
     state_0.macros[std::string{identifier}] = md;
 }
 
+void process_ifdef(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
+{
+    auto current_iter = begin;
+    if (current_iter == end) {
+        throw std::runtime_error("No identifier for ifdef found");
+    }
+    const auto identifier_iter = current_iter;
+    const auto identifier = *identifier_iter;
+
+    const bool defined = state_0.macros.find(std::string{identifier}) != state_0.macros.end();
+    state_0.if_states.push_back({defined, defined});
+}
+
+void process_else(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
+{
+    if (state_0.if_states.size() == 0) {
+        throw std::runtime_error("unexpected else");
+    }
+    auto &current_if_state = state_0.if_states.back();
+    if (current_if_state.true_case_found) {
+        current_if_state.true_case_active = false;
+    } else {
+        current_if_state.true_case_active = true;
+        current_if_state.true_case_found = true;
+    }
+}
+
+void process_endif(state &state_0)
+{
+    if (state_0.if_states.size() == 0) {
+        throw std::runtime_error("unexpected else");
+    }
+    state_0.if_states.pop_back();
+}
+
 void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0)
 {
     state_0.file_stack.push_back({path, 1});
@@ -266,29 +336,39 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
         audit << fmt::format("{}:{} >> {}\n", state_0.file_stack.back().file.string(), state_0.file_stack.back().line_number, line);
 
         const std::vector<std::string_view> split = split_line(line);
-        const std::vector<std::string_view> non_ws = filter_white_space(split);
-        if (non_ws.size() >= 2 && non_ws[0] == "##") {
-            const std::string_view directive = non_ws[1];
-            if (directive == include_directive || directive == includesilent_directive) {
-                if (non_ws.size() < 3) {
-                    throw std::runtime_error(fmt::format("Missing argument for directive in {}", line));
+        auto current_iter = split.begin();
+        const auto end = split.end();
+        const auto maybe_directive = read_directive(current_iter, end);
+        const bool active = state_0.if_states.empty() || state_0.if_states.back().true_case_active;
+
+        if (maybe_directive.has_value()) {
+            current_iter = std::get<0>(*maybe_directive);
+            const std::string_view directive = std::get<1>(*maybe_directive);
+            if (active) {
+                if (directive == include_directive || directive == includesilent_directive) {
+                    process_include(current_iter, end, out, audit, state_0);
+                } else if (directive == fileprefix_directive) {
+                    process_fileprefix(current_iter, end, state_0);
+                } else if (directive == nosilent_directive) {
+                    /* Just ignore */
+                } else if (directive == set1_directive) {
+                    process_set1(current_iter, end, state_0);
                 }
-                const std::string_view included_file{non_ws[2]};
-                process_file(state_0.prefix / included_file, out, audit, state_0);
-            } else if (directive == fileprefix_directive) {
-                std::string_view prefix{non_ws.size() > 2 ? non_ws[2] : std::string_view{}};
-                state_0.prefix = prefix;
-            } else if (directive == nosilent_directive) {
-                /* Just ignore */
-            } else if (directive == set1_directive) {
-                process_set1(split, state_0);
-            } else {
-                throw std::runtime_error{fmt::format("Unknown directive {}", directive)};
+            }
+            if (directive == ifdef_directive) {
+                process_ifdef(current_iter, end, state_0);
+            } else if (directive == else_directive) {
+                process_else(current_iter, end, state_0);
+            } else if (directive == endif_directive) {
+                process_endif(state_0);
             }
         } else {
-            out << line << '\n';
-            audit << fmt::format("{} << {}\n", output_file_name, line);
+            if (active) {
+                out << line << '\n';
+                audit << fmt::format("{} << {}\n", output_file_name, line);
+            }
         }
+
         ++state_0.file_stack.back().line_number;
     }
     state_0.file_stack.pop_back();
