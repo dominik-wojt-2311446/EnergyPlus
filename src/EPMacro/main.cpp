@@ -46,14 +46,17 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "fmt/core.h"
+#include <algorithm>
 #include <cstddef>
 #include <fmt/format.h>
 
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <map>
 #include <optional>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -67,6 +70,13 @@ constexpr std::string_view include_directive = "include";
 constexpr std::string_view includesilent_directive = "includesilent";
 constexpr std::string_view fileprefix_directive = "fileprefix";
 constexpr std::string_view nosilent_directive = "nosilent";
+constexpr std::string_view set1_directive = "set1";
+constexpr std::string_view if_directive = "if";
+constexpr std::string_view ifdef_directive = "ifdef";
+constexpr std::string_view ifndef_directive = "ifndef";
+constexpr std::string_view else_directive = "else";
+constexpr std::string_view elseif_directive = "elseif";
+constexpr std::string_view endif_directive = "endif";
 
 struct macro_definition
 {
@@ -101,22 +111,45 @@ std::string_view strip_ws(const std::string_view text)
     return {text.begin() + begin, end - begin};
 }
 
-std::optional<std::tuple<std::string_view, std::string_view>> parse_directive(const std::string_view line)
+enum class character_category
 {
-    std::string_view remaining{line};
-    if (!starts_with(remaining, directive_marker)) {
-        return {};
+    white_space,
+    left_square_bracket,
+    right_square_bracket,
+    hash,
+    others
+};
+
+character_category get_character_category(const char c)
+{
+    if (white_space.find(c) != std::string_view::npos) return character_category::white_space;
+    if (c == '[') return character_category::left_square_bracket;
+    if (c == ']') return character_category::right_square_bracket;
+    if (c == '#') return character_category::hash;
+    return character_category::others;
+}
+
+std::vector<std::string_view> split_line(std::string_view line)
+{
+    std::vector<std::string_view> result;
+    std::string_view::iterator current_begin = line.begin();
+    while (current_begin != line.end()) {
+        character_category category = get_character_category(*current_begin);
+        const std::string_view::iterator current_end =
+            std::find_if_not(current_begin + 1, line.end(), [&](const auto c) { return get_character_category(c) == category; });
+        result.emplace_back(current_begin, current_end - current_begin);
+        current_begin = current_end;
     }
+    return result;
+}
 
-    remaining = remaining.substr(directive_marker.length());
-    const std::size_t directive_end = remaining.find_first_of(white_space);
-    const std::string_view directive{remaining.substr(0, directive_end)};
-    if (directive.empty()) throw std::runtime_error("Empty directive!");
-
-    remaining = remaining.substr(directive.length());
-    const std::size_t next_begin = remaining.find_first_not_of(white_space);
-    const std::string_view past_directive{next_begin == std::string_view::npos ? std::string_view{} : remaining.substr(next_begin)};
-    return {{directive, past_directive}};
+std::vector<std::string_view> filter_white_space(std::vector<std::string_view> strings)
+{
+    std::vector<std::string_view> result;
+    std::copy_if(strings.begin(), strings.end(), std::back_inserter(result), [](const auto s) {
+        return !s.empty() && get_character_category(s.front()) != character_category::white_space;
+    });
+    return result;
 }
 
 void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0)
@@ -124,18 +157,25 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
     state_0.file_stack.push_back({path, 1});
 
     std::ifstream in{path};
-    if (!in.is_open()) throw std::runtime_error(fmt::format("Could not open input file {}", path.string()));
+    if (!in.is_open()) {
+        throw std::runtime_error(fmt::format("Could not open input file {}", path.string()));
+    }
 
     for (std::string line; std::getline(in, line);) {
         audit << fmt::format("{}:{} >> {}\n", state_0.file_stack.back().file.string(), state_0.file_stack.back().line_number, line);
-        const auto parsed_directive = parse_directive(line);
-        if (parsed_directive.has_value()) {
-            const auto [directive, past_directive] = *parsed_directive;
+
+        const std::vector<std::string_view> split = split_line(line);
+        const std::vector<std::string_view> non_ws = filter_white_space(split);
+        if (non_ws.size() >= 2 && non_ws[0] == "##") {
+            const std::string_view directive = non_ws[1];
             if (directive == include_directive || directive == includesilent_directive) {
-                std::string_view included_file{strip_ws(past_directive)};
+                if (non_ws.size() < 3) {
+                    throw std::runtime_error(fmt::format("Missing argument for directive in {}", line));
+                }
+                const std::string_view included_file{non_ws[2]};
                 process_file(state_0.prefix / included_file, out, audit, state_0);
             } else if (directive == fileprefix_directive) {
-                std::string_view prefix{strip_ws(past_directive)};
+                std::string_view prefix{non_ws.size() > 2 ? non_ws[2] : std::string_view{}};
                 state_0.prefix = prefix;
             } else if (directive == nosilent_directive) {
                 /* Just ignore */
