@@ -1,0 +1,44 @@
+!!!! ifdef ifndef
+!
+!##set1 defined_with_set1 "defined_with_set1"
+!##ifdef defined_with_set1
+!! defined defined_with_set1
+!##else
+!! Error: defined_with_set1 should be defined
+!##endif
+!
+!##ifdef not_defined
+!! Error: not_defined should not be defined
+!##else
+!! not defined not_defined
+!##endif
+!
+!##ifndef defined_with_set1
+!! defined defined_with_set1
+!##else
+!! Error: defined_with_set1 should be defined
+!##endif
+!
+!##ifdef not_defined
+!! Error: not_defined should not be defined
+!##else
+!! not defined not_defined
+!##endif
+!
+!
+!!!! if, elseif, else, #[_ EQS _]
+!
+!! animal not defined
+!#include ifelse_animal.imf
+!
+!! animal is tiger
+!#set1 animal "tiger"
+!#include ifelse_animal.imf
+!
+!! animal is elephant
+!#set1 animal "elephant"
+!#include ifelse_animal.imf
+!
+!! animal is lion
+!#set1 animal "lion"
+!#include ifelse_animal.imf

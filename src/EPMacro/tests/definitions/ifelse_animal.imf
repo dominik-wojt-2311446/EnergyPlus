@@ -1,0 +1,10 @@
+##if #[animal[] EQS "lion"]
+! animal[] == "lion"
+##elseif #[animal[] EQS "elephant"]
+! animal[] == "elephant"
+##elseif #[animal[] EQS "tiger"]
+! animal[] == "tiger"
+##else
+! animal[] is not a known animal
+##endif
+##clear

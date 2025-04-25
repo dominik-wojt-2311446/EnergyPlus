@@ -27,20 +27,16 @@ if(BUILD_TESTING)
 
   file(MAKE_DIRECTORY ${TEST_DIR})
 
-  add_test(
-    NAME EPMacro.simple
-    COMMAND
-      "${Python_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/test_EPMacro.py" #
-      --epmacro-exe $<TARGET_FILE:EPMacro> #
-      --input-dir "${PROJECT_SOURCE_DIR}/tests/simple" #
-      --output-dir "${TEST_DIR}/simple")
-  
-  add_test(
-    NAME EPMacro.include
-    COMMAND
-      "${Python_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/test_EPMacro.py" #
-      --epmacro-exe $<TARGET_FILE:EPMacro> #
-      --input-dir "${PROJECT_SOURCE_DIR}/tests/include" #
-      --output-dir "${TEST_DIR}/include")
+  set(TESTS simple include definitions)
+
+  foreach(TEST ${TESTS})
+    add_test(
+      NAME EPMacro.${TEST}
+      COMMAND
+        "${Python_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/test_EPMacro.py" #
+        --epmacro-exe $<TARGET_FILE:EPMacro> #
+        --input-dir "${PROJECT_SOURCE_DIR}/tests/${TEST}" #
+        --output-dir "${TEST_DIR}/${TEST}")
+  endforeach()
 
 endif()
