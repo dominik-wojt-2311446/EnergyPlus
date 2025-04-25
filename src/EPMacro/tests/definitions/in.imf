@@ -13,18 +13,35 @@
 ! not defined not_defined
 ##endif
 !
-!##ifndef defined_with_set1
-!! defined defined_with_set1
-!##else
-!! Error: defined_with_set1 should be defined
-!##endif
+##ifndef defined_with_set1
+! defined defined_with_set1
+##else
+! Error: defined_with_set1 should be defined
+##endif
 !
-!##ifdef not_defined
-!! Error: not_defined should not be defined
-!##else
-!! not defined not_defined
-!##endif
+##ifdef not_defined
+! Error: not_defined should not be defined
+##else
+! not defined not_defined
+##endif
 !
+!
+!!!!! nested if
+##ifdef defined_with_set1
+! defined defined_with_set1
+##ifdef not_defined
+! Error: not_defined should not be defined
+##else
+! not defined not_defined
+##endif
+##else
+##ifdef not_defined_2
+! Error: not_defined_2 should not be defined
+##else
+! not defined not_defined_2
+##endif
+! Error: defined_with_set1 should be defined
+##endif
 !
 !!!! if, elseif, else, #[_ EQS _]
 !

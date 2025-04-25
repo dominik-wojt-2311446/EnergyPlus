@@ -4,18 +4,14 @@
 !
 ! not defined not_defined
 !
-!##ifndef defined_with_set1
-!! defined defined_with_set1
-!##else
-!! Error: defined_with_set1 should be defined
-!##endif
+! Error: defined_with_set1 should be defined
 !
-!##ifdef not_defined
-!! Error: not_defined should not be defined
-!##else
-!! not defined not_defined
-!##endif
+! not defined not_defined
 !
+!
+!!!!! nested if
+! defined defined_with_set1
+! not defined not_defined
 !
 !!!! if, elseif, else, #[_ EQS _]
 !

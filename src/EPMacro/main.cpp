@@ -288,7 +288,7 @@ void process_set1(const vector_sv::const_iterator begin, const vector_sv::const_
     state_0.macros[std::string{identifier}] = md;
 }
 
-void process_ifdef(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
+void process_ifdef(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0, const bool should_be_defined)
 {
     auto current_iter = begin;
     if (current_iter == end) {
@@ -298,7 +298,10 @@ void process_ifdef(const vector_sv::const_iterator begin, const vector_sv::const
     const auto identifier = *identifier_iter;
 
     const bool defined = state_0.macros.find(std::string{identifier}) != state_0.macros.end();
-    state_0.if_states.push_back({defined, defined});
+    const bool true_case = should_be_defined == defined;
+    const bool parent_is_active = state_0.if_states.empty() || state_0.if_states.back().true_case_active;
+    const bool active = parent_is_active && true_case;
+    state_0.if_states.push_back({active, active});
 }
 
 void process_else(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
@@ -307,10 +310,10 @@ void process_else(const vector_sv::const_iterator begin, const vector_sv::const_
         throw std::runtime_error("unexpected else");
     }
     auto &current_if_state = state_0.if_states.back();
-    if (current_if_state.true_case_found) {
-        current_if_state.true_case_active = false;
-    } else {
-        current_if_state.true_case_active = true;
+    const bool parent_is_active = state_0.if_states.size() < 2 || std::next(state_0.if_states.rbegin())->true_case_active;
+    const bool active = parent_is_active && !current_if_state.true_case_found;
+    current_if_state.true_case_active = active;
+    if (active) {
         current_if_state.true_case_found = true;
     }
 }
@@ -356,7 +359,9 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
                 }
             }
             if (directive == ifdef_directive) {
-                process_ifdef(current_iter, end, state_0);
+                process_ifdef(current_iter, end, state_0, true);
+            } else if (directive == ifndef_directive) {
+                process_ifdef(current_iter, end, state_0, false);
             } else if (directive == else_directive) {
                 process_else(current_iter, end, state_0);
             } else if (directive == endif_directive) {
