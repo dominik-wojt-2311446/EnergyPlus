@@ -14,219 +14,224 @@
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
  KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
-      *   3 * !##set1 defined_with_set1 "defined_with_set1"
- KRDRD  <-3-  KARDI1=   1  KARDI2=  46  KARDX=   1  KRDNUM=   3 mTxtP =     0  mP=     0  mStk=     0
+      #   3 # ##set1 defined_with_set1 "defined_with_set1"
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  45  KARDX=  26  KRDNUM=   3 mTxtP =     0  mP=     0  mStk=     0
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
-            !##set1 defined_with_set1 "defined_with_set1" 
- KRDRD  --> kardi1=   1  KARDI2=  46 KARDX=  47  mTxtP=     0  mStk=     0
+            ##set1 defined_with_set1 "defined_with_set1" 
+ mPPset   <-- mIAX000=     0  mIAX=     0
+
+
+DUMP OF:     IA(mIA
+       1:
+ KRDRD  --> kardi1=   1  KARDI2=  45 KARDX=  46  mTxtP=     0  mStk=******
       *   4 * !##ifdef defined_with_set1
- KRDRD  <-3-  KARDI1=   1  KARDI2=  27  KARDX=   1  KRDNUM=   4 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  27  KARDX=   1  KRDNUM=   4 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##ifdef defined_with_set1 
- KRDRD  --> kardi1=   1  KARDI2=  27 KARDX=  28  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  27 KARDX=  28  mTxtP=     0  mStk=******
       *   5 * !! defined defined_with_set1
- KRDRD  <-3-  KARDI1=   1  KARDI2=  29  KARDX=   1  KRDNUM=   5 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  29  KARDX=   1  KRDNUM=   5 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! defined defined_with_set1 
- KRDRD  --> kardi1=   1  KARDI2=  29 KARDX=  30  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  29 KARDX=  30  mTxtP=     0  mStk=******
       *   6 * !##else
- KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=   6 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=   6 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##else 
- KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=******
       *   7 * !! Error: defined_with_set1 should be defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  46  KARDX=   1  KRDNUM=   7 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  46  KARDX=   1  KRDNUM=   7 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! Error: defined_with_set1 should be defined 
- KRDRD  --> kardi1=   1  KARDI2=  46 KARDX=  47  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  46 KARDX=  47  mTxtP=     0  mStk=******
       *   8 * !##endif
- KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=   8 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=   8 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##endif 
- KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=******
       *   9 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=   9 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=   9 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  10 * !##ifdef not_defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  21  KARDX=   1  KRDNUM=  10 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  21  KARDX=   1  KRDNUM=  10 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##ifdef not_defined 
- KRDRD  --> kardi1=   1  KARDI2=  21 KARDX=  22  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  21 KARDX=  22  mTxtP=     0  mStk=******
       *  11 * !! Error: not_defined should not be defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  44  KARDX=   1  KRDNUM=  11 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  44  KARDX=   1  KRDNUM=  11 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! Error: not_defined should not be defined 
- KRDRD  --> kardi1=   1  KARDI2=  44 KARDX=  45  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  44 KARDX=  45  mTxtP=     0  mStk=******
       *  12 * !##else
- KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=  12 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=  12 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##else 
- KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=******
       *  13 * !! not defined not_defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  27  KARDX=   1  KRDNUM=  13 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  27  KARDX=   1  KRDNUM=  13 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! not defined not_defined 
- KRDRD  --> kardi1=   1  KARDI2=  27 KARDX=  28  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  27 KARDX=  28  mTxtP=     0  mStk=******
       *  14 * !##endif
- KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=  14 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=  14 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##endif 
- KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=******
       *  15 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  15 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  15 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  16 * !##ifndef defined_with_set1
- KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  16 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  16 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##ifndef defined_with_set1 
- KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=******
       *  17 * !! defined defined_with_set1
- KRDRD  <-3-  KARDI1=   1  KARDI2=  29  KARDX=   1  KRDNUM=  17 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  29  KARDX=   1  KRDNUM=  17 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! defined defined_with_set1 
- KRDRD  --> kardi1=   1  KARDI2=  29 KARDX=  30  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  29 KARDX=  30  mTxtP=     0  mStk=******
       *  18 * !##else
- KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=  18 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=  18 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##else 
- KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=******
       *  19 * !! Error: defined_with_set1 should be defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  46  KARDX=   1  KRDNUM=  19 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  46  KARDX=   1  KRDNUM=  19 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! Error: defined_with_set1 should be defined 
- KRDRD  --> kardi1=   1  KARDI2=  46 KARDX=  47  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  46 KARDX=  47  mTxtP=     0  mStk=******
       *  20 * !##endif
- KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=  20 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=  20 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##endif 
- KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=******
       *  21 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  21 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  21 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  22 * !##ifdef not_defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  21  KARDX=   1  KRDNUM=  22 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  21  KARDX=   1  KRDNUM=  22 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##ifdef not_defined 
- KRDRD  --> kardi1=   1  KARDI2=  21 KARDX=  22  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  21 KARDX=  22  mTxtP=     0  mStk=******
       *  23 * !! Error: not_defined should not be defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  44  KARDX=   1  KRDNUM=  23 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  44  KARDX=   1  KRDNUM=  23 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! Error: not_defined should not be defined 
- KRDRD  --> kardi1=   1  KARDI2=  44 KARDX=  45  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  44 KARDX=  45  mTxtP=     0  mStk=******
       *  24 * !##else
- KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=  24 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   8  KARDX=   1  KRDNUM=  24 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##else 
- KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   8 KARDX=   9  mTxtP=     0  mStk=******
       *  25 * !! not defined not_defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  27  KARDX=   1  KRDNUM=  25 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  27  KARDX=   1  KRDNUM=  25 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! not defined not_defined 
- KRDRD  --> kardi1=   1  KARDI2=  27 KARDX=  28  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  27 KARDX=  28  mTxtP=     0  mStk=******
       *  26 * !##endif
- KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=  26 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   9  KARDX=   1  KRDNUM=  26 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !##endif 
- KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   9 KARDX=  10  mTxtP=     0  mStk=******
       *  27 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  27 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  27 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  28 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  28 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  28 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  29 * !!!! if, elseif, else, #[_ EQS _]
- KRDRD  <-3-  KARDI1=   1  KARDI2=  34  KARDX=   1  KRDNUM=  29 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  34  KARDX=   1  KRDNUM=  29 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !!!! if, elseif, else, #[_ EQS _] 
- KRDRD  --> kardi1=   1  KARDI2=  34 KARDX=  35  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  34 KARDX=  35  mTxtP=     0  mStk=******
       *  30 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  30 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  30 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  31 * !! animal not defined
- KRDRD  <-3-  KARDI1=   1  KARDI2=  22  KARDX=   1  KRDNUM=  31 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  22  KARDX=   1  KRDNUM=  31 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! animal not defined 
- KRDRD  --> kardi1=   1  KARDI2=  22 KARDX=  23  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  22 KARDX=  23  mTxtP=     0  mStk=******
       *  32 * !#include ifelse_animal.imf
- KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  32 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  32 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !#include ifelse_animal.imf 
- KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=******
       *  33 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  33 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  33 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  34 * !! animal is tiger
- KRDRD  <-3-  KARDI1=   1  KARDI2=  19  KARDX=   1  KRDNUM=  34 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  19  KARDX=   1  KRDNUM=  34 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! animal is tiger 
- KRDRD  --> kardi1=   1  KARDI2=  19 KARDX=  20  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  19 KARDX=  20  mTxtP=     0  mStk=******
       *  35 * !#set1 animal "tiger"
- KRDRD  <-3-  KARDI1=   1  KARDI2=  22  KARDX=   1  KRDNUM=  35 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  22  KARDX=   1  KRDNUM=  35 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !#set1 animal "tiger" 
- KRDRD  --> kardi1=   1  KARDI2=  22 KARDX=  23  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  22 KARDX=  23  mTxtP=     0  mStk=******
       *  36 * !#include ifelse_animal.imf
- KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  36 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  36 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !#include ifelse_animal.imf 
- KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=******
       *  37 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  37 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  37 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  38 * !! animal is elephant
- KRDRD  <-3-  KARDI1=   1  KARDI2=  22  KARDX=   1  KRDNUM=  38 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  22  KARDX=   1  KRDNUM=  38 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! animal is elephant 
- KRDRD  --> kardi1=   1  KARDI2=  22 KARDX=  23  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  22 KARDX=  23  mTxtP=     0  mStk=******
       *  39 * !#set1 animal "elephant"
- KRDRD  <-3-  KARDI1=   1  KARDI2=  25  KARDX=   1  KRDNUM=  39 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  25  KARDX=   1  KRDNUM=  39 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !#set1 animal "elephant" 
- KRDRD  --> kardi1=   1  KARDI2=  25 KARDX=  26  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  25 KARDX=  26  mTxtP=     0  mStk=******
       *  40 * !#include ifelse_animal.imf
- KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  40 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  40 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !#include ifelse_animal.imf 
- KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=******
       *  41 * !
- KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  41 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   2  KARDX=   1  KRDNUM=  41 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ! 
- KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=   2 KARDX=   3  mTxtP=     0  mStk=******
       *  42 * !! animal is lion
- KRDRD  <-3-  KARDI1=   1  KARDI2=  18  KARDX=   1  KRDNUM=  42 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  18  KARDX=   1  KRDNUM=  42 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! animal is lion 
- KRDRD  --> kardi1=   1  KARDI2=  18 KARDX=  19  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  18 KARDX=  19  mTxtP=     0  mStk=******
       *  43 * !#set1 animal "lion"
- KRDRD  <-3-  KARDI1=   1  KARDI2=  21  KARDX=   1  KRDNUM=  43 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  21  KARDX=   1  KRDNUM=  43 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !#set1 animal "lion" 
- KRDRD  --> kardi1=   1  KARDI2=  21 KARDX=  22  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  21 KARDX=  22  mTxtP=     0  mStk=******
       *  44 * !#include ifelse_animal.imf
- KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  44 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  28  KARDX=   1  KRDNUM=  44 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !#include ifelse_animal.imf 
- KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=     0
+ KRDRD  --> kardi1=   1  KARDI2=  28 KARDX=  29  mTxtP=     0  mStk=******
 
 
  ****************************** EPMacro processing terminated.
- KRDRD  <-3-  KARDI1=   1  KARDI2=  12  KARDX=   1  KRDNUM=  44 mTxtP =     0  mP=     0  mStk=     0
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  12  KARDX=   1  KRDNUM=  44 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ..  END ..  

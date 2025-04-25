@@ -54,7 +54,6 @@
 #include <fstream>
 #include <iterator>
 #include <map>
-#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -117,6 +116,7 @@ enum class character_category
     left_square_bracket,
     right_square_bracket,
     hash,
+    comma,
     others
 };
 
@@ -126,30 +126,131 @@ character_category get_character_category(const char c)
     if (c == '[') return character_category::left_square_bracket;
     if (c == ']') return character_category::right_square_bracket;
     if (c == '#') return character_category::hash;
+    if (c == ',') return character_category::comma;
     return character_category::others;
 }
 
-std::vector<std::string_view> split_line(std::string_view line)
+character_category get_character_category(const std::string_view s)
 {
-    std::vector<std::string_view> result;
+    if (s.empty()) {
+        throw std::runtime_error("Trying to get character category for an empty string view.");
+    }
+    return get_character_category(s.front());
+}
+
+using vector_sv = std::vector<std::string_view>;
+
+vector_sv split_line(std::string_view line)
+{
+    vector_sv result;
     std::string_view::iterator current_begin = line.begin();
     while (current_begin != line.end()) {
         character_category category = get_character_category(*current_begin);
-        const std::string_view::iterator current_end =
-            std::find_if_not(current_begin + 1, line.end(), [&](const auto c) { return get_character_category(c) == category; });
+        const std::string_view::iterator current_end = [&]() {
+            /* TODO: handle quotes */
+            if (category == character_category::left_square_bracket || category == character_category::right_square_bracket) {
+                return current_begin + 1;
+            } else {
+                return std::find_if_not(current_begin + 1, line.end(), [&](const auto c) { return get_character_category(c) == category; });
+            }
+        }();
         result.emplace_back(current_begin, current_end - current_begin);
         current_begin = current_end;
     }
     return result;
 }
 
-std::vector<std::string_view> filter_white_space(std::vector<std::string_view> strings)
+vector_sv filter_white_space(const vector_sv &strings)
 {
-    std::vector<std::string_view> result;
+    vector_sv result;
     std::copy_if(strings.begin(), strings.end(), std::back_inserter(result), [](const auto s) {
-        return !s.empty() && get_character_category(s.front()) != character_category::white_space;
+        return get_character_category(s) != character_category::white_space;
     });
     return result;
+}
+
+vector_sv::const_iterator find_non_ws(const vector_sv::const_iterator i, const vector_sv::const_iterator end)
+{
+    return std::find_if(i, end, [](const auto s) { //
+        return get_character_category(s) != character_category::white_space;
+    });
+}
+
+vector_sv::const_iterator next_non_ws(const vector_sv::const_iterator i, const vector_sv::const_iterator end)
+{
+    if (i == end) {
+        return end;
+    }
+    return find_non_ws(std::next(i), end);
+}
+
+vector_sv read_argument_list(const vector_sv::const_iterator begin, const vector_sv::const_iterator end)
+{
+    vector_sv result;
+    bool comma_read = false;
+    std::for_each(begin, end, [&](const auto s) {
+        const auto category = get_character_category(s);
+        if (category == character_category::others) {
+            result.push_back(s);
+            comma_read = false;
+            return;
+        }
+        if (category == character_category::comma) {
+            if (comma_read) {
+                throw std::runtime_error("Double comma found in argument list");
+            }
+            comma_read = true;
+            return;
+        }
+        if (category == character_category::white_space) {
+            return;
+        }
+        throw std::runtime_error("Unexpected category detected on macro argument list");
+    });
+    if (comma_read) {
+        throw std::runtime_error("Trailing comma found in argument list");
+    }
+    return result;
+}
+
+void process_set1(const vector_sv &split_line_0, state &state_0)
+{
+    const auto end = split_line_0.end();
+    const auto hash_hash_iter = find_non_ws(split_line_0.begin(), end);
+    const auto set1_iter = next_non_ws(hash_hash_iter, end);
+    if (set1_iter == end || *hash_hash_iter != "##" || *set1_iter != set1_directive) {
+        throw std::runtime_error("No set1 directive found");
+    }
+    const auto identifier_iter = next_non_ws(set1_iter, end);
+    if (set1_iter == end || *hash_hash_iter != "##" || *set1_iter != set1_directive) {
+        throw std::runtime_error("No identifier for set1 found");
+    }
+    const auto identifier = *identifier_iter;
+
+    macro_definition md;
+    auto current_iter = next_non_ws(identifier_iter, end);
+    if (current_iter != end && get_character_category(*current_iter) == character_category::left_square_bracket) {
+        const auto left_bracket_iter = current_iter;
+        const auto right_bracket_iter = std::find_if(left_bracket_iter, end, [](const auto s) { //
+            return get_character_category(s) == character_category::right_square_bracket;
+        });
+        if (right_bracket_iter == end) {
+            throw std::runtime_error("No matching ] found for open [");
+        }
+        const vector_sv arugment_list = read_argument_list(left_bracket_iter + 1, right_bracket_iter);
+        std::transform(arugment_list.begin(), arugment_list.end(), std::back_inserter(md.arguments), [](const auto s) { //
+            return std::string{s};
+        });
+        current_iter = next_non_ws(right_bracket_iter, end);
+    }
+
+    const auto definition_begin = current_iter;
+    /* TODO: evaluate before assignment */
+    /* The definition may be empty (definition_begin == end). */
+    std::transform(definition_begin, end, std::back_inserter(md.tokens), [](const auto s) { //
+        return std::string{s};
+    });
+    state_0.macros[std::string{identifier}] = md;
 }
 
 void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0)
@@ -179,6 +280,8 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
                 state_0.prefix = prefix;
             } else if (directive == nosilent_directive) {
                 /* Just ignore */
+            } else if (directive == set1_directive) {
+                process_set1(split, state_0);
             } else {
                 throw std::runtime_error{fmt::format("Unknown directive {}", directive)};
             }

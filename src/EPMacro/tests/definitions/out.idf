@@ -1,6 +1,5 @@
 !!!! ifdef ifndef
 !
-!##set1 defined_with_set1 "defined_with_set1"
 !##ifdef defined_with_set1
 !! defined defined_with_set1
 !##else
