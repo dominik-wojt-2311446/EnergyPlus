@@ -53,6 +53,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <iterator>
 #include <map>
 #include <numeric>
@@ -266,6 +267,9 @@ void process_fileprefix(const vector_sv::const_iterator begin, const vector_sv::
     state_0.prefix = fileprefix;
 }
 
+std::tuple<std::string, vector_sv::const_iterator>
+do_substitution(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, const std::map<std::string, macro_definition> &macros);
+
 void process_set1(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
 {
     auto current_iter = begin;
@@ -292,12 +296,62 @@ void process_set1(const vector_sv::const_iterator begin, const vector_sv::const_
         current_iter = next_non_ws(right_bracket_iter, end);
     }
 
-    const auto definition_begin = current_iter;
-    /* TODO: evaluate before assignment */
     /* The definition may be empty (definition_begin == end). */
-    /* For set1 only the first non_ws token is read */
-    const std::string definition = definition_begin == end ? std::string{} : std::string{*definition_begin};
+    /* For set1 only one expression is read */
+    std::string definition;
+    if (current_iter != end) {
+        std::tie(definition, current_iter) = do_substitution(current_iter, end, state_0.macros);
+    }
+    md.tokens.push_back(definition);
     state_0.macros[std::string{identifier}] = md;
+}
+
+/* begin is at '[', returned iterator should be one past ']' */
+std::tuple<std::string, vector_sv::const_iterator> read_arguments_and_substite(const vector_sv::const_iterator begin,
+                                                                               const vector_sv::const_iterator end,
+                                                                               const std::string_view macro_name,
+                                                                               const std::map<std::string, macro_definition> &macros)
+{
+    const auto macro_iter = macros.find(std::string{macro_name});
+    if (macro_iter == macros.end()) {
+        throw std::runtime_error(fmt::format("Unknown macro: {}", macro_name));
+    }
+    const std::vector<std::string> &argument_names = macro_iter->second.arguments;
+    const std::vector<std::string> &definition = macro_iter->second.tokens;
+    std::vector<std::string> argument_assignment;
+    auto current_iter = next_non_ws(begin, end);
+    for (std::size_t i = 0; i < argument_names.size(); ++i) {
+        if (current_iter != end && *current_iter == ",") {
+            current_iter = next_non_ws(current_iter, end);
+        }
+        if (current_iter == end || *current_iter == "]") {
+            throw std::runtime_error(fmt::format("Insufficient number of arguments for macro {}, expected {}, found {}",
+                                                 macro_name,
+                                                 argument_names.size(),
+                                                 argument_assignment.size()));
+        }
+        if (get_character_category(*current_iter) != character_category::others) {
+            throw std::runtime_error(
+                fmt::format("Unexpected string while parsing arument {} of macro {}", macro_name, argument_assignment.size() + 1));
+        }
+        std::string assignment;
+        std::tie(assignment, current_iter) = do_substitution(current_iter, end, macros);
+        argument_assignment.push_back(assignment);
+        current_iter = find_non_ws(current_iter, end);
+    }
+    if (current_iter == end || *current_iter != "]") {
+        throw std::runtime_error(fmt::format("After reading {} arguments for macro {}, \"]\" was expected", argument_assignment.size(), macro_name));
+    }
+    std::string result;
+    for (const std::string token : definition) {
+        const std::size_t argument_index = std::find(argument_names.begin(), argument_names.end(), token) - argument_names.begin();
+        if (argument_index < argument_names.size()) {
+            result += definition[argument_index];
+        } else {
+            result += token;
+        }
+    }
+    return {result, std::next(current_iter)};
 }
 
 std::tuple<std::string, vector_sv::const_iterator>
@@ -314,10 +368,11 @@ do_substitution(const vector_sv::const_iterator begin, const vector_sv::const_it
     if (non_ws_1 == end) {
         return {std::string{*begin}, std::next(begin)};
     }
-    if (*non_ws_0 == "#" && *non_ws_1 == "[") {
+    if (get_character_category(*non_ws_0) == character_category::others && *non_ws_1 == "[") {
+        const std::string_view macro_name = *non_ws_0;
+        return read_arguments_and_substite(non_ws_1, end, macro_name, macros);
+    } else if (*non_ws_0 == "#" && *non_ws_1 == "[") {
         throw std::runtime_error("TODO: support #[]");
-    } else if (get_character_category(*non_ws_0) == character_category::others && *non_ws_1 == "[") {
-        throw std::runtime_error("TODO: support macro substitution");
     } else if (*non_ws_0 == "#" && *non_ws_1 == "eval") {
         auto non_ws_2 = next_non_ws(non_ws_1, end);
         if (non_ws_2 == end || *non_ws_2 != "[") {
