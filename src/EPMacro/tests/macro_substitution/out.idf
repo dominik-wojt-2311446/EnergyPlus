@@ -1,0 +1,27 @@
+! set1 uses just one word
+!! extend "variable_1": variable_1[]
+!! "this variable_1[] should not be extended"
+!! ! def1 uses all text till end of line (excluding trailing white space)
+!! ##def1 variable_2 some   value 2
+!! extend "variable_2": variable_2[]
+!! !
+!! !
+!! ! def1 vs set1 evaluation time
+!! ##def1 variable_3 variable_1[]
+!! ##set1 variable_4 variable_1[]
+!! extend "variable_3": variable_3[]
+!! extend "variable_4": variable_4[]
+!! ##set1 variable_1 new value
+!! ! variable_3 is defined with def1, so it is evaluated after substitution
+!! extend "variable_3": variable_3[]
+!! ! variable_4 is defined with set1, so it was evaluated at definition
+!! extend "variable_4": variable_4[]
+!! !
+!! !
+!! ! with one parameter
+!! ##def1 with_params_1[x] "x" is >> x <<, let's see what's next
+!! extent "with_params_1[next]": with_params_1[next]
+!! !
+!! !
+!! ! evalute parameter
+!! extent "with_params_1[with_params_1[x]]": with_params_1[with_params_1[next]]

@@ -1,0 +1,157 @@
+
+
+ ****************************** EPMacro processing begun.
+
+
+ KRDRD  --> kardi1=   1  KARDI2= 501 KARDX= 502  mTxtP=     0  mStk=     0
+      *   1 * ! set1 uses just one word
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  26  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ! set1 uses just one word 
+ KRDRD  --> kardi1=   1  KARDI2=  26 KARDX=  27  mTxtP=     0  mStk=     0
+      #   2 # ##set1 variable_1 some   value
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  31  KARDX=  19  KRDNUM=   2 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ##set1 variable_1 some   value 
+ mPPset   <-- mIAX000=     0  mIAX=     0
+
+
+DUMP OF:     IA(mIA
+       1:
+ KRDRD  --> kardi1=   1  KARDI2=  31 KARDX=  32  mTxtP=     0  mStk=******
+      *   3 * !! extend "variable_1": variable_1[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  37  KARDX=   1  KRDNUM=   3 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extend "variable_1": variable_1[] 
+ KRDRD  --> kardi1=   1  KARDI2=  37 KARDX=  38  mTxtP=     0  mStk=******
+      *   4 * !! "this variable_1[] should not be extended"
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  46  KARDX=   1  KRDNUM=   4 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! "this variable_1[] should not be extended" 
+ KRDRD  --> kardi1=   1  KARDI2=  46 KARDX=  47  mTxtP=     0  mStk=******
+      *   5 * !! ! def1 uses all text till end of line (excluding trailing white space)
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  74  KARDX=   1  KRDNUM=   5 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! def1 uses all text till end of line (excluding trailing white space) 
+ KRDRD  --> kardi1=   1  KARDI2=  74 KARDX=  75  mTxtP=     0  mStk=******
+      *   6 * !! ##def1 variable_2 some   value 2
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  36  KARDX=   1  KRDNUM=   6 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ##def1 variable_2 some   value 2 
+ KRDRD  --> kardi1=   1  KARDI2=  36 KARDX=  37  mTxtP=     0  mStk=******
+      *   7 * !! extend "variable_2": variable_2[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  37  KARDX=   1  KRDNUM=   7 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extend "variable_2": variable_2[] 
+ KRDRD  --> kardi1=   1  KARDI2=  37 KARDX=  38  mTxtP=     0  mStk=******
+      *   8 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=   8 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *   9 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=   9 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *  10 * !! ! def1 vs set1 evaluation time
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  34  KARDX=   1  KRDNUM=  10 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! def1 vs set1 evaluation time 
+ KRDRD  --> kardi1=   1  KARDI2=  34 KARDX=  35  mTxtP=     0  mStk=******
+      *  11 * !! ##def1 variable_3 variable_1[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  34  KARDX=   1  KRDNUM=  11 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ##def1 variable_3 variable_1[] 
+ KRDRD  --> kardi1=   1  KARDI2=  34 KARDX=  35  mTxtP=     0  mStk=******
+      *  12 * !! ##set1 variable_4 variable_1[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  34  KARDX=   1  KRDNUM=  12 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ##set1 variable_4 variable_1[] 
+ KRDRD  --> kardi1=   1  KARDI2=  34 KARDX=  35  mTxtP=     0  mStk=******
+      *  13 * !! extend "variable_3": variable_3[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  37  KARDX=   1  KRDNUM=  13 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extend "variable_3": variable_3[] 
+ KRDRD  --> kardi1=   1  KARDI2=  37 KARDX=  38  mTxtP=     0  mStk=******
+      *  14 * !! extend "variable_4": variable_4[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  37  KARDX=   1  KRDNUM=  14 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extend "variable_4": variable_4[] 
+ KRDRD  --> kardi1=   1  KARDI2=  37 KARDX=  38  mTxtP=     0  mStk=******
+      *  15 * !! ##set1 variable_1 new value
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  31  KARDX=   1  KRDNUM=  15 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ##set1 variable_1 new value 
+ KRDRD  --> kardi1=   1  KARDI2=  31 KARDX=  32  mTxtP=     0  mStk=******
+      *  16 * !! ! variable_3 is defined with def1, so it is evaluated after substitution
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  76  KARDX=   1  KRDNUM=  16 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! variable_3 is defined with def1, so it is evaluated after substitution 
+ KRDRD  --> kardi1=   1  KARDI2=  76 KARDX=  77  mTxtP=     0  mStk=******
+      *  17 * !! extend "variable_3": variable_3[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  37  KARDX=   1  KRDNUM=  17 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extend "variable_3": variable_3[] 
+ KRDRD  --> kardi1=   1  KARDI2=  37 KARDX=  38  mTxtP=     0  mStk=******
+      *  18 * !! ! variable_4 is defined with set1, so it was evaluated at definition
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  72  KARDX=   1  KRDNUM=  18 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! variable_4 is defined with set1, so it was evaluated at definition 
+ KRDRD  --> kardi1=   1  KARDI2=  72 KARDX=  73  mTxtP=     0  mStk=******
+      *  19 * !! extend "variable_4": variable_4[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  37  KARDX=   1  KRDNUM=  19 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extend "variable_4": variable_4[] 
+ KRDRD  --> kardi1=   1  KARDI2=  37 KARDX=  38  mTxtP=     0  mStk=******
+      *  20 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=  20 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *  21 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=  21 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *  22 * !! ! with one parameter
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  24  KARDX=   1  KRDNUM=  22 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! with one parameter 
+ KRDRD  --> kardi1=   1  KARDI2=  24 KARDX=  25  mTxtP=     0  mStk=******
+      *  23 * !! ##def1 with_params_1[x] "x" is >> x <<, let's see what's next
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  65  KARDX=   1  KRDNUM=  23 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ##def1 with_params_1[x] "x" is >> x <<, let's see what's next 
+ KRDRD  --> kardi1=   1  KARDI2=  65 KARDX=  66  mTxtP=     0  mStk=******
+      *  24 * !! extent "with_params_1[next]": with_params_1[next]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  53  KARDX=   1  KRDNUM=  24 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extent "with_params_1[next]": with_params_1[next] 
+ KRDRD  --> kardi1=   1  KARDI2=  53 KARDX=  54  mTxtP=     0  mStk=******
+      *  25 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=  25 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *  26 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=  26 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *  27 * !! ! evalute parameter
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  23  KARDX=   1  KRDNUM=  27 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! evalute parameter 
+ KRDRD  --> kardi1=   1  KARDI2=  23 KARDX=  24  mTxtP=     0  mStk=******
+      *  28 * !! extent "with_params_1[with_params_1[x]]": with_params_1[with_params_1[next]]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  80  KARDX=   1  KRDNUM=  28 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! extent "with_params_1[with_params_1[x]]": with_params_1[with_params_1[next]] 
+ KRDRD  --> kardi1=   1  KARDI2=  80 KARDX=  81  mTxtP=     0  mStk=******
+
+
+ ****************************** EPMacro processing terminated.
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  12  KARDX=   1  KRDNUM=  28 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ..  END ..  
