@@ -1,0 +1,12 @@
+! in.cmf,1
+b with space.imf,1
+b with space/b with space.imf,1
+b with space/c with space.imf,1
+! empty prefix does not always work in original EPMacro
+b with space.imf,1
+b with space/b with space.imf,1
+c with space.imf,1
+! silent include
+b with space.imf,1
+! silent include after ##nosilent
+b with space.imf,1

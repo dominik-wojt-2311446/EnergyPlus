@@ -54,6 +54,7 @@
 #include <fstream>
 #include <iterator>
 #include <map>
+#include <numeric>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -177,7 +178,7 @@ vector_sv filter_white_space(const vector_sv &strings)
     return result;
 }
 
-vector_sv::const_iterator find_non_ws(const vector_sv::const_iterator i, const vector_sv::const_iterator end)
+template <typename iterator_t> iterator_t find_non_ws(const iterator_t i, const iterator_t end)
 {
     return std::find_if(i, end, [](const auto s) { //
         return get_character_category(s) != character_category::white_space;
@@ -235,6 +236,14 @@ std::optional<std::tuple<vector_sv::const_iterator, std::string_view>> read_dire
 
 void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0);
 
+/* std::accumulate uses "+", not "+=" and so cannot be used here. */
+std::string join_sv(const vector_sv::const_iterator begin, const vector_sv::const_iterator end)
+{
+    std::string result{};
+    std::for_each(begin, end, [&](const auto x) { result.append(x); });
+    return result;
+}
+
 void process_include(
     const vector_sv::const_iterator begin, const vector_sv::const_iterator end, std::ofstream &out, std::ofstream &audit, state &state_0)
 {
@@ -242,14 +251,16 @@ void process_include(
     if (file_name_iter == end) {
         throw std::runtime_error(fmt::format("Missing argument for include"));
     }
-    const std::string_view file_name{*file_name_iter};
+    const auto file_name_end_iter = find_non_ws(std::make_reverse_iterator(end), std::make_reverse_iterator(file_name_iter)).base();
+    const std::string file_name = join_sv(file_name_iter, file_name_end_iter);
     process_file(state_0.prefix / file_name, out, audit, state_0);
 }
 
 void process_fileprefix(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
 {
     const auto fileprefix_iter = find_non_ws(begin, end);
-    const std::string_view fileprefix{fileprefix_iter != end ? *fileprefix_iter : std::string_view{}};
+    const auto fileprefix_end_iter = find_non_ws(std::make_reverse_iterator(end), std::make_reverse_iterator(fileprefix_iter)).base();
+    const std::string fileprefix = join_sv(fileprefix_iter, fileprefix_end_iter);
     state_0.prefix = fileprefix;
 }
 

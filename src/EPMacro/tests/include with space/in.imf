@@ -1,0 +1,13 @@
+! in.cmf,1
+##include b with space.imf
+##fileprefix b with space/
+##include b with space.imf
+! empty prefix does not always work in original EPMacro
+##fileprefix ./
+##include b with space.imf
+##include b with space/b with space.imf
+! silent include
+##includesilent b with space.imf
+##nosilent
+! silent include after ##nosilent
+##includesilent b with space.imf

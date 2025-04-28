@@ -27,7 +27,7 @@ if(BUILD_TESTING)
 
   file(MAKE_DIRECTORY ${TEST_DIR})
 
-  set(TESTS simple include definitions)
+  set(TESTS simple include definitions "include with space")
 
   foreach(TEST ${TESTS})
     add_test(

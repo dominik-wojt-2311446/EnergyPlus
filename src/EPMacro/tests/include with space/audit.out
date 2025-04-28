@@ -1,0 +1,97 @@
+
+
+ ****************************** EPMacro processing begun.
+
+
+ KRDRD  --> kardi1=   1  KARDI2= 501 KARDX= 502  mTxtP=     0  mStk=     0
+      *   1 * ! in.cmf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  11  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ! in.cmf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  11 KARDX=  12  mTxtP=     0  mStk=     0
+      #   2 # ##include b with space.imf
+ 1    *   1 * b with space.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  19  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  19 KARDX=  20  mTxtP=     0  mStk=     0
+ file : in.imf
+      #   3 # ##fileprefix b with space/
+      #   4 # ##include b with space.imf
+ file : b with space/b with space.imf
+ 1    *   1 * b with space/b with space.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  32  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b with space/b with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  32 KARDX=  33  mTxtP=     0  mStk=     0
+ 1    #   2 # ##include c with space.imf
+ file : b with space/c with space.imf
+ 2    *   1 * b with space/c with space.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  32  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b with space/c with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  32 KARDX=  33  mTxtP=     0  mStk=     0
+ file : b with space/b with space.imf
+ file : in.imf
+      *   5 * ! empty prefix does not always work in original EPMacro
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  56  KARDX=   1  KRDNUM=   5 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ! empty prefix does not always work in original EPMacro 
+ KRDRD  --> kardi1=   1  KARDI2=  56 KARDX=  57  mTxtP=     0  mStk=     0
+      #   6 # ##fileprefix ./
+      #   7 # ##include b with space.imf
+ file : ./b with space.imf
+ 1    *   1 * b with space.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  19  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  19 KARDX=  20  mTxtP=     0  mStk=     0
+ file : in.imf
+      #   8 # ##include b with space/b with space.imf
+ file : ./b with space/b with space.imf
+ 1    *   1 * b with space/b with space.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  32  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b with space/b with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  32 KARDX=  33  mTxtP=     0  mStk=     0
+ 1    #   2 # ##include c with space.imf
+ file : ./c with space.imf
+ 2    *   1 * c with space.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  19  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            c with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  19 KARDX=  20  mTxtP=     0  mStk=     0
+ file : ./b with space/b with space.imf
+ file : in.imf
+      *   9 * ! silent include
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  17  KARDX=   1  KRDNUM=   9 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ! silent include 
+ KRDRD  --> kardi1=   1  KARDI2=  17 KARDX=  18  mTxtP=     0  mStk=     0
+      #  10 # ##includesilent b with space.imf
+ file : ./b with space.imf
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  19  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  19 KARDX=  20  mTxtP=     0  mStk=     0
+ file : in.imf
+      #  11 # ##nosilent
+      *  12 * ! silent include after ##nosilent
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  34  KARDX=   1  KRDNUM=  12 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ! silent include after ##nosilent 
+ KRDRD  --> kardi1=   1  KARDI2=  34 KARDX=  35  mTxtP=     0  mStk=     0
+      #  13 # ##includesilent b with space.imf
+ file : ./b with space.imf
+ 1    *   1 * b with space.imf,1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  19  KARDX=   1  KRDNUM=   1 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            b with space.imf,1 
+ KRDRD  --> kardi1=   1  KARDI2=  19 KARDX=  20  mTxtP=     0  mStk=     0
+ file : in.imf
+
+
+ ****************************** EPMacro processing terminated.
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  12  KARDX=   1  KRDNUM=  13 mTxtP =     0  mP=     0  mStk=     0
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            ..  END ..  
