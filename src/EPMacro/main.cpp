@@ -48,6 +48,7 @@
 #include "fmt/core.h"
 #include <algorithm>
 #include <cstddef>
+#include <exception>
 #include <fmt/format.h>
 
 #include <filesystem>
@@ -56,6 +57,7 @@
 #include <map>
 #include <numeric>
 #include <optional>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -293,10 +295,50 @@ void process_set1(const vector_sv::const_iterator begin, const vector_sv::const_
     const auto definition_begin = current_iter;
     /* TODO: evaluate before assignment */
     /* The definition may be empty (definition_begin == end). */
-    std::transform(definition_begin, end, std::back_inserter(md.tokens), [](const auto s) { //
-        return std::string{s};
-    });
+    /* For set1 only the first non_ws token is read */
+    const std::string definition = definition_begin == end ? std::string{} : std::string{*definition_begin};
     state_0.macros[std::string{identifier}] = md;
+}
+
+std::tuple<std::string, vector_sv::const_iterator>
+do_substitution(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, const std::map<std::string, macro_definition> &macros)
+{
+    if (get_character_category(*begin) == character_category::white_space) {
+        return {std::string{*begin}, std::next(begin)};
+    }
+    if (begin->front() == '!') {
+        return {join_sv(begin, end), end};
+    }
+    auto non_ws_0 = begin;
+    auto non_ws_1 = next_non_ws(non_ws_0, end);
+    if (non_ws_1 == end) {
+        return {std::string{*begin}, std::next(begin)};
+    }
+    if (*non_ws_0 == "#" && *non_ws_1 == "[") {
+        throw std::runtime_error("TODO: support #[]");
+    } else if (get_character_category(*non_ws_0) == character_category::others && *non_ws_1 == "[") {
+        throw std::runtime_error("TODO: support macro substitution");
+    } else if (*non_ws_0 == "#" && *non_ws_1 == "eval") {
+        auto non_ws_2 = next_non_ws(non_ws_1, end);
+        if (non_ws_2 == end || *non_ws_2 != "[") {
+            return {std::string{*begin}, std::next(begin)};
+        }
+        throw std::runtime_error("TODO: support #eval[]");
+    }
+    return {std::string{*begin}, std::next(begin)};
+}
+
+std::string
+do_substitutions(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, const std::map<std::string, macro_definition> &macros)
+{
+    std::string result;
+    auto iter = begin;
+    while (iter != end) {
+        std::string string;
+        std::tie(string, iter) = do_substitution(iter, end, macros);
+        result.append(string);
+    }
+    return result;
 }
 
 void process_ifdef(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0, const bool should_be_defined)
@@ -349,40 +391,47 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
     for (std::string line; std::getline(in, line);) {
         audit << fmt::format("{}:{} >> {}\n", state_0.file_stack.back().file.string(), state_0.file_stack.back().line_number, line);
 
-        const std::vector<std::string_view> split = split_line(line);
-        auto current_iter = split.begin();
-        const auto end = split.end();
-        const auto maybe_directive = read_directive(current_iter, end);
-        const bool active = state_0.if_states.empty() || state_0.if_states.back().true_case_active;
+        try {
+            const std::vector<std::string_view> split = split_line(line);
+            auto current_iter = split.begin();
+            const auto end = split.end();
+            const auto maybe_directive = read_directive(current_iter, end);
+            const bool active = state_0.if_states.empty() || state_0.if_states.back().true_case_active;
 
-        if (maybe_directive.has_value()) {
-            current_iter = std::get<0>(*maybe_directive);
-            const std::string_view directive = std::get<1>(*maybe_directive);
-            if (active) {
-                if (directive == include_directive || directive == includesilent_directive) {
-                    process_include(current_iter, end, out, audit, state_0);
-                } else if (directive == fileprefix_directive) {
-                    process_fileprefix(current_iter, end, state_0);
-                } else if (directive == nosilent_directive) {
-                    /* Just ignore */
-                } else if (directive == set1_directive) {
-                    process_set1(current_iter, end, state_0);
+            if (maybe_directive.has_value()) {
+                current_iter = std::get<0>(*maybe_directive);
+                const std::string_view directive = std::get<1>(*maybe_directive);
+                if (active) {
+                    if (directive == include_directive || directive == includesilent_directive) {
+                        process_include(current_iter, end, out, audit, state_0);
+                    } else if (directive == fileprefix_directive) {
+                        process_fileprefix(current_iter, end, state_0);
+                    } else if (directive == nosilent_directive) {
+                        /* Just ignore */
+                    } else if (directive == set1_directive) {
+                        process_set1(current_iter, end, state_0);
+                    }
+                }
+                if (directive == ifdef_directive) {
+                    process_ifdef(current_iter, end, state_0, true);
+                } else if (directive == ifndef_directive) {
+                    process_ifdef(current_iter, end, state_0, false);
+                } else if (directive == else_directive) {
+                    process_else(current_iter, end, state_0);
+                } else if (directive == endif_directive) {
+                    process_endif(state_0);
+                }
+            } else {
+                if (active) {
+                    current_iter = find_non_ws(current_iter, end);
+                    const std::string processed_line = do_substitutions(current_iter, end, state_0.macros);
+                    out << processed_line << '\n';
+                    audit << fmt::format("{} << {}\n", output_file_name, processed_line);
                 }
             }
-            if (directive == ifdef_directive) {
-                process_ifdef(current_iter, end, state_0, true);
-            } else if (directive == ifndef_directive) {
-                process_ifdef(current_iter, end, state_0, false);
-            } else if (directive == else_directive) {
-                process_else(current_iter, end, state_0);
-            } else if (directive == endif_directive) {
-                process_endif(state_0);
-            }
-        } else {
-            if (active) {
-                out << line << '\n';
-                audit << fmt::format("{} << {}\n", output_file_name, line);
-            }
+        } catch (const std::exception &e) {
+            throw std::runtime_error(fmt::format(
+                "At {}:{} : {}\nError: {}", state_0.file_stack.back().file.string(), state_0.file_stack.back().line_number, line, e.what()));
         }
 
         ++state_0.file_stack.back().line_number;

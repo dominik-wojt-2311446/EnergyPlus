@@ -26,3 +26,10 @@
 !! !
 !! ! evalute parameter
 !! extent "with_params_1[with_params_1[x]]": with_params_1[with_params_1[next]]
+!! !
+!! !
+!! ! computed variable name is not used, but the extra brackets do not cause error
+!! ## set1 v_name variable_1
+!! "v_name[][]" : >> v_name[][] <<
+!! ! gives: variable_1[]
+!! ! not going to reproduce that

@@ -149,9 +149,44 @@ DUMP OF:     IA(mIA
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             !! extent "with_params_1[with_params_1[x]]": with_params_1[with_params_1[next]] 
  KRDRD  --> kardi1=   1  KARDI2=  80 KARDX=  81  mTxtP=     0  mStk=******
+      *  29 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=  29 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *  30 * !! !
+ KRDRD  <-3-  KARDI1=   1  KARDI2=   5  KARDX=   1  KRDNUM=  30 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! 
+ KRDRD  --> kardi1=   1  KARDI2=   5 KARDX=   6  mTxtP=     0  mStk=******
+      *  31 * !! ! computed variable name is not used, but the extra brackets do not cause error
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  83  KARDX=   1  KRDNUM=  31 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! computed variable name is not used, but the extra brackets do not cause error 
+ KRDRD  --> kardi1=   1  KARDI2=  83 KARDX=  84  mTxtP=     0  mStk=******
+      *  32 * !! ## set1 v_name variable_1
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  29  KARDX=   1  KRDNUM=  32 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ## set1 v_name variable_1 
+ KRDRD  --> kardi1=   1  KARDI2=  29 KARDX=  30  mTxtP=     0  mStk=******
+      *  33 * !! "v_name[][]" : >> v_name[][] <<
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  35  KARDX=   1  KRDNUM=  33 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! "v_name[][]" : >> v_name[][] << 
+ KRDRD  --> kardi1=   1  KARDI2=  35 KARDX=  36  mTxtP=     0  mStk=******
+      *  34 * !! ! gives: variable_1[]
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  25  KARDX=   1  KRDNUM=  34 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! gives: variable_1[] 
+ KRDRD  --> kardi1=   1  KARDI2=  25 KARDX=  26  mTxtP=     0  mStk=******
+      *  35 * !! ! not going to reproduce that
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  33  KARDX=   1  KRDNUM=  35 mTxtP =     0  mP=     0  mStk=******
+            .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
+            !! ! not going to reproduce that 
+ KRDRD  --> kardi1=   1  KARDI2=  33 KARDX=  34  mTxtP=     0  mStk=******
 
 
  ****************************** EPMacro processing terminated.
- KRDRD  <-3-  KARDI1=   1  KARDI2=  12  KARDX=   1  KRDNUM=  28 mTxtP =     0  mP=     0  mStk=******
+ KRDRD  <-3-  KARDI1=   1  KARDI2=  12  KARDX=   1  KRDNUM=  35 mTxtP =     0  mP=     0  mStk=******
             .2345678.1.2345678.2.2345678.3.2345678.4.2345678.5.2345678.6.2345678.7.2345678.8.2345678.9.2345678.0
             ..  END ..  
