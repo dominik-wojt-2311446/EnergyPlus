@@ -15,16 +15,13 @@ extend "variable_4": some
 !
 !
 ! with one parameter
-!! ##def1 with_params_1[x] "x" is >> x <<, let's see what's next
-!! extend "with_params_1[next]": with_params_1[next]
-!! !
-!! !
-!! ! evalute parameter
-!! extend "with_params_1[with_params_1[x]]": with_params_1[with_params_1[next]]
-!! !
-!! !
-!! ! computed variable name is not used, but the extra brackets do not cause error
-!! ## set1 v_name variable_1
-!! "v_name[][]" : >> v_name[][] <<
-!! ! gives: variable_1[]
-!! ! not going to reproduce that
+extend "with_params_1[next]": "x" is >> next <<, let's see what's next
+!
+!
+! evalute parameter
+extend "with_params_1[with_params_1[x]]": "x" is >> "x" is >> next <<, let's see what's next <<, let's see what's next
+!
+!
+! computed variable name is not used, but the extra brackets do not cause error
+"v_name[][]" : >> variable_1[] <<
+! gives: variable_1[]

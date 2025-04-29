@@ -381,7 +381,7 @@ std::tuple<std::string, vector_sv::const_iterator> read_arguments_and_substite(c
     for (const std::string_view token : definition) {
         const std::size_t argument_index = std::find(argument_names.begin(), argument_names.end(), token) - argument_names.begin();
         if (argument_index < argument_names.size()) {
-            substituted.push_back(definition[argument_index]);
+            substituted.push_back(argument_assignment[argument_index]);
         } else {
             substituted.push_back(token);
         }
