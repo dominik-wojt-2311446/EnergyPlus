@@ -53,6 +53,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <iterator>
 #include <map>
 #include <optional>
@@ -75,6 +76,7 @@ constexpr std::string_view nosilent_directive = "nosilent";
 constexpr std::string_view set1_directive = "set1";
 constexpr std::string_view def1_directive = "def1";
 constexpr std::string_view def_directive = "def";
+constexpr std::string_view enddef_directive = "enddef";
 constexpr std::string_view if_directive = "if";
 constexpr std::string_view ifdef_directive = "ifdef";
 constexpr std::string_view ifndef_directive = "ifndef";
@@ -247,7 +249,7 @@ std::optional<std::tuple<vector_sv::const_iterator, std::string_view>> read_dire
     return {{next_non_ws(directive_iter, end), *directive_iter}};
 }
 
-void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0);
+void process_file(const std::filesystem::path &path, std::ostream &out, std::ostream &audit, state &state_0);
 
 /* std::accumulate uses "+", not "+=" and so cannot be used here. */
 std::string join_sv(const vector_sv::const_iterator begin, const vector_sv::const_iterator end)
@@ -258,7 +260,7 @@ std::string join_sv(const vector_sv::const_iterator begin, const vector_sv::cons
 }
 
 void process_include(
-    const vector_sv::const_iterator begin, const vector_sv::const_iterator end, std::ofstream &out, std::ofstream &audit, state &state_0)
+    const vector_sv::const_iterator begin, const vector_sv::const_iterator end, std::ostream &out, std::ostream &audit, state &state_0)
 {
     const auto file_name_iter = find_non_ws(begin, end);
     if (file_name_iter == end) {
@@ -287,7 +289,12 @@ enum class definition_type
     def
 };
 
-void process_def(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0, definition_type type)
+void process_def(const vector_sv::const_iterator begin,
+                 const vector_sv::const_iterator end,
+                 state &state_0,
+                 std::istream &in,
+                 std::ostream &audit,
+                 const definition_type type)
 {
     auto current_iter = begin;
     if (current_iter == end) {
@@ -331,7 +338,27 @@ void process_def(const vector_sv::const_iterator begin, const vector_sv::const_i
         }
     } break;
     case definition_type::def: {
-        throw std::runtime_error("TODO: handle ##def");
+        if (current_iter != end) {
+            std::transform(current_iter, end, std::back_inserter(md.tokens), [&](const auto x) { //
+                return std::string{x};
+            });
+        }
+        bool enddef_read = false;
+        for (std::string line; !enddef_read && std::getline(in, line);) {
+            audit << fmt::format("{}:{} >> {}\n", state_0.file_stack.back().file.string(), state_0.file_stack.back().line_number, line);
+
+            const auto split = split_line(line);
+            const auto maybe_directive = read_directive(split.begin(), split.end());
+            if (maybe_directive.has_value() && std::get<1>(*maybe_directive) == enddef_directive) {
+                ++state_0.file_stack.back().line_number;
+                break;
+            }
+
+            md.tokens.push_back("\n");
+            std::transform(split.begin(), split.end(), std::back_inserter(md.tokens), [&](const auto x) { //
+                return std::string{x};
+            });
+        }
     } break;
     }
 
@@ -471,7 +498,7 @@ void process_endif(state &state_0)
     state_0.if_states.pop_back();
 }
 
-void process_file(const std::filesystem::path &path, std::ofstream &out, std::ofstream &audit, state &state_0)
+void process_file(const std::filesystem::path &path, std::ostream &out, std::ostream &audit, state &state_0)
 {
     state_0.file_stack.push_back({path, 1});
 
@@ -501,11 +528,11 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
                     } else if (directive == nosilent_directive) {
                         /* Just ignore */
                     } else if (directive == set1_directive) {
-                        process_def(current_iter, end, state_0, definition_type::set1);
+                        process_def(current_iter, end, state_0, in, audit, definition_type::set1);
                     } else if (directive == def1_directive) {
-                        process_def(current_iter, end, state_0, definition_type::def1);
+                        process_def(current_iter, end, state_0, in, audit, definition_type::def1);
                     } else if (directive == def_directive) {
-                        process_def(current_iter, end, state_0, definition_type::def);
+                        process_def(current_iter, end, state_0, in, audit, definition_type::def);
                     }
                 }
                 if (directive == ifdef_directive) {

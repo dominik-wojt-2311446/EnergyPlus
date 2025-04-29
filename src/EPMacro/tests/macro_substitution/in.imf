@@ -1,22 +1,22 @@
 ! set1 uses just one word
-##set1 variable_1 some   value
-extend "variable_1": variable_1[]
-"this variable_1[] should not be extended"
+##set1 macro_1 some   value
+extend "macro_1": macro_1[]
+"this macro_1[] should not be extended"
 ! def1 uses all text till end of line (excluding trailing white space)
-##def1 variable_2 some   value 2
-extend "variable_2": variable_2[]
+##def1 macro_2 some   value 2
+extend "macro_2": macro_2[]
 !
 !
 ! def1 vs set1 evaluation time
-##def1 variable_3 variable_1[]
-##set1 variable_4 variable_1[]
-extend "variable_3": variable_3[]
-extend "variable_4": variable_4[]
-##set1 variable_1 new value
-! variable_3 is defined with def1, so it is evaluated after substitution
-extend "variable_3": variable_3[]
-! variable_4 is defined with set1, so it was evaluated at definition
-extend "variable_4": variable_4[]
+##def1 macro_3 macro_1[]
+##set1 macro_4 macro_1[]
+extend "macro_3": macro_3[]
+extend "macro_4": macro_4[]
+##set1 macro_1 new value
+! macro_3 is defined with def1, so it is evaluated after substitution
+extend "macro_3": macro_3[]
+! macro_4 is defined with set1, so it was evaluated at definition
+extend "macro_4": macro_4[]
 !
 !
 ! with one parameter
@@ -28,7 +28,18 @@ extend "with_params_1[next]": with_params_1[next]
 extend "with_params_1[with_params_1[x]]": with_params_1[with_params_1[next]]
 !
 !
-! computed variable name is not used, but the extra brackets do not cause error
-## set1 v_name variable_1
+! computed macro name is not used, but the extra brackets do not cause error
+## set1 v_name macro_1
 "v_name[][]" : >> v_name[][] <<
-! gives: variable_1[]
+! gives: macro_1[]
+!
+!
+! multiline def
+##def multiline_macro[arg_1, arg_2 arg_3 ,arg_4] multiline macro line 1, arg_2
+multiline macro line 2, "arg_1"
+ ! When there is a space on both sides of arg_3, original EPMacro makes a
+ ! substitution. Not sure if this was intended. Not trying to reproduce.
+multiline macro line 3, "arg_3 "
+multiline macro line 4 ! arg_4 in a comment
+##enddef
+"multiline_macro[t_1 t_2 , t_3 t_4]" = multiline_macro[t_1 t_2 , t_3 t_4]

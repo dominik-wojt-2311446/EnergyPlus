@@ -1,17 +1,17 @@
 ! set1 uses just one word
-extend "variable_1": some
-"this variable_1[] should not be extended"
+extend "macro_1": some
+"this macro_1[] should not be extended"
 ! def1 uses all text till end of line (excluding trailing white space)
-extend "variable_2": some   value 2
+extend "macro_2": some   value 2
 !
 !
 ! def1 vs set1 evaluation time
-extend "variable_3": some
-extend "variable_4": some
-! variable_3 is defined with def1, so it is evaluated after substitution
-extend "variable_3": new
-! variable_4 is defined with set1, so it was evaluated at definition
-extend "variable_4": some
+extend "macro_3": some
+extend "macro_4": some
+! macro_3 is defined with def1, so it is evaluated after substitution
+extend "macro_3": new
+! macro_4 is defined with set1, so it was evaluated at definition
+extend "macro_4": some
 !
 !
 ! with one parameter
@@ -22,6 +22,15 @@ extend "with_params_1[next]": "x" is >> next <<, let's see what's next
 extend "with_params_1[with_params_1[x]]": "x" is >> "x" is >> next <<, let's see what's next <<, let's see what's next
 !
 !
-! computed variable name is not used, but the extra brackets do not cause error
-"v_name[][]" : >> variable_1[] <<
-! gives: variable_1[]
+! computed macro name is not used, but the extra brackets do not cause error
+"v_name[][]" : >> macro_1[] <<
+! gives: macro_1[]
+!
+!
+! multiline def
+"multiline_macro[t_1 t_2 , t_3 t_4]" = multiline macro line 1, t_2
+multiline macro line 2, "arg_1"
+ ! When there is a space on both sides of t_3, original EPMacro makes a
+ ! substitution. Not sure if this was intended. Not trying to reproduce.
+multiline macro line 3, "arg_3 "
+multiline macro line 4 ! t_4 in a comment
