@@ -73,6 +73,8 @@ constexpr std::string_view includesilent_directive = "includesilent";
 constexpr std::string_view fileprefix_directive = "fileprefix";
 constexpr std::string_view nosilent_directive = "nosilent";
 constexpr std::string_view set1_directive = "set1";
+constexpr std::string_view def1_directive = "def1";
+constexpr std::string_view def_directive = "def";
 constexpr std::string_view if_directive = "if";
 constexpr std::string_view ifdef_directive = "ifdef";
 constexpr std::string_view ifndef_directive = "ifndef";
@@ -278,7 +280,14 @@ void process_fileprefix(const vector_sv::const_iterator begin, const vector_sv::
 std::tuple<std::string, vector_sv::const_iterator>
 do_substitution(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, const std::map<std::string, macro_definition> &macros);
 
-void process_set1(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0)
+enum class definition_type
+{
+    set1,
+    def1,
+    def
+};
+
+void process_def(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, state &state_0, definition_type type)
 {
     auto current_iter = begin;
     if (current_iter == end) {
@@ -306,11 +315,26 @@ void process_set1(const vector_sv::const_iterator begin, const vector_sv::const_
 
     /* The definition may be empty (definition_begin == end). */
     /* For set1 only one expression is read */
-    std::string definition;
-    if (current_iter != end) {
-        std::tie(definition, current_iter) = do_substitution(current_iter, end, state_0.macros);
+    switch (type) {
+    case definition_type::set1: {
+        std::string definition;
+        if (current_iter != end) {
+            std::tie(definition, current_iter) = do_substitution(current_iter, end, state_0.macros);
+        }
+        md.tokens.push_back(definition);
+    } break;
+    case definition_type::def1: {
+        if (current_iter != end) {
+            std::transform(current_iter, end, std::back_inserter(md.tokens), [&](const auto x) { //
+                return std::string{x};
+            });
+        }
+    } break;
+    case definition_type::def: {
+        throw std::runtime_error("TODO: handle ##def");
+    } break;
     }
-    md.tokens.push_back(definition);
+
     state_0.macros[std::string{identifier}] = md;
 }
 
@@ -472,7 +496,11 @@ void process_file(const std::filesystem::path &path, std::ofstream &out, std::of
                     } else if (directive == nosilent_directive) {
                         /* Just ignore */
                     } else if (directive == set1_directive) {
-                        process_set1(current_iter, end, state_0);
+                        process_def(current_iter, end, state_0, definition_type::set1);
+                    } else if (directive == def1_directive) {
+                        process_def(current_iter, end, state_0, definition_type::def1);
+                    } else if (directive == def_directive) {
+                        process_def(current_iter, end, state_0, definition_type::def);
                     }
                 }
                 if (directive == ifdef_directive) {
