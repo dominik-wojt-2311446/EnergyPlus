@@ -53,10 +53,8 @@
 
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <iterator>
 #include <map>
-#include <numeric>
 #include <optional>
 #include <ostream>
 #include <stdexcept>
@@ -129,6 +127,7 @@ enum class character_category
     right_square_bracket,
     hash,
     comma,
+    double_quote,
     others
 };
 
@@ -139,6 +138,7 @@ character_category get_character_category(const char c)
     if (c == ']') return character_category::right_square_bracket;
     if (c == '#') return character_category::hash;
     if (c == ',') return character_category::comma;
+    if (c == '"') return character_category::double_quote;
     return character_category::others;
 }
 
@@ -159,9 +159,17 @@ vector_sv split_line(std::string_view line)
     while (current_begin != line.end()) {
         character_category category = get_character_category(*current_begin);
         const std::string_view::iterator current_end = [&]() {
-            /* TODO: handle quotes */
-            if (category == character_category::left_square_bracket || category == character_category::right_square_bracket) {
+            if (category == character_category::left_square_bracket || category == character_category::right_square_bracket ||
+                category == character_category::comma) {
                 return current_begin + 1;
+            } else if (category == character_category::double_quote) {
+                std::string_view::iterator mathing_iter = std::find(current_begin + 1, line.end(), '"');
+                /* Silently ignoring a quote without a matching one.
+                 * Processe as ordinary sign.
+                 * To properly detect error, we would need to first check, we
+                 * are not processing a comment. */
+                if (mathing_iter == line.end()) return current_begin + 1;
+                return mathing_iter + 1;
             } else {
                 return std::find_if_not(current_begin + 1, line.end(), [&](const auto c) { return get_character_category(c) == category; });
             }

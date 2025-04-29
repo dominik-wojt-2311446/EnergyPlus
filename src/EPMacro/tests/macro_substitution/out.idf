@@ -1,6 +1,6 @@
 ! set1 uses just one word
 extend "variable_1": some
-!! "this variable_1[] should not be extended"
+"this variable_1[] should not be extended"
 !! ! def1 uses all text till end of line (excluding trailing white space)
 !! ##def1 variable_2 some   value 2
 !! extend "variable_2": variable_2[]
