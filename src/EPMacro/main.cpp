@@ -77,6 +77,7 @@ constexpr std::string_view set1_directive = "set1";
 constexpr std::string_view def1_directive = "def1";
 constexpr std::string_view def_directive = "def";
 constexpr std::string_view enddef_directive = "enddef";
+constexpr std::string_view clear_directive = "clear";
 constexpr std::string_view if_directive = "if";
 constexpr std::string_view ifdef_directive = "ifdef";
 constexpr std::string_view ifndef_directive = "ifndef";
@@ -87,7 +88,7 @@ constexpr std::string_view endif_directive = "endif";
 struct macro_definition
 {
     std::vector<std::string> arguments;
-    std::vector<std::string> tokens;
+    std::vector<std::string> content;
 };
 
 struct file_pointer
@@ -328,18 +329,18 @@ void process_def(const vector_sv::const_iterator begin,
         if (current_iter != end) {
             std::tie(definition, current_iter) = do_substitution(current_iter, end, state_0.macros);
         }
-        md.tokens.push_back(definition);
+        md.content.push_back(definition);
     } break;
     case definition_type::def1: {
         if (current_iter != end) {
-            std::transform(current_iter, end, std::back_inserter(md.tokens), [&](const auto x) { //
+            std::transform(current_iter, end, std::back_inserter(md.content), [&](const auto x) { //
                 return std::string{x};
             });
         }
     } break;
     case definition_type::def: {
         if (current_iter != end) {
-            std::transform(current_iter, end, std::back_inserter(md.tokens), [&](const auto x) { //
+            std::transform(current_iter, end, std::back_inserter(md.content), [&](const auto x) { //
                 return std::string{x};
             });
         }
@@ -354,8 +355,8 @@ void process_def(const vector_sv::const_iterator begin,
                 break;
             }
 
-            md.tokens.push_back("\n");
-            std::transform(split.begin(), split.end(), std::back_inserter(md.tokens), [&](const auto x) { //
+            md.content.push_back("\n");
+            std::transform(split.begin(), split.end(), std::back_inserter(md.content), [&](const auto x) { //
                 return std::string{x};
             });
         }
@@ -379,7 +380,7 @@ std::tuple<std::string, vector_sv::const_iterator> read_arguments_and_substite(c
         throw std::runtime_error(fmt::format("Unknown macro: {}", macro_name));
     }
     const std::vector<std::string> &argument_names = macro_iter->second.arguments;
-    const std::vector<std::string> &definition = macro_iter->second.tokens;
+    const std::vector<std::string> &content = macro_iter->second.content;
     std::vector<std::string> argument_assignment;
     auto current_iter = next_non_ws(begin, end);
     for (std::size_t i = 0; i < argument_names.size(); ++i) {
@@ -405,15 +406,15 @@ std::tuple<std::string, vector_sv::const_iterator> read_arguments_and_substite(c
         throw std::runtime_error(fmt::format("After reading {} arguments for macro {}, \"]\" was expected", argument_assignment.size(), macro_name));
     }
     vector_sv substituted;
-    for (const std::string_view token : definition) {
-        const std::size_t argument_index = std::find(argument_names.begin(), argument_names.end(), token) - argument_names.begin();
+    for (const std::string_view string : content) {
+        const std::size_t argument_index = std::find(argument_names.begin(), argument_names.end(), string) - argument_names.begin();
         if (argument_index < argument_names.size()) {
             substituted.push_back(argument_assignment[argument_index]);
         } else {
-            substituted.push_back(token);
+            substituted.push_back(string);
         }
     }
-    /* Process the produced tokens again, until no substitutions can be done. */
+    /* Process the produced strings again, until no substitutions can be done. */
     const std::string result = do_substitutions(substituted.begin(), substituted.end(), macros);
     return {result, std::next(current_iter)};
 }
@@ -533,6 +534,8 @@ void process_file(const std::filesystem::path &path, std::ostream &out, std::ost
                         process_def(current_iter, end, state_0, in, audit, definition_type::def1);
                     } else if (directive == def_directive) {
                         process_def(current_iter, end, state_0, in, audit, definition_type::def);
+                    } else if (directive == clear_directive) {
+                        state_0.macros = {};
                     }
                 }
                 if (directive == ifdef_directive) {

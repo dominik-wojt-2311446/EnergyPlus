@@ -1,0 +1,16 @@
+!!!! ifdef ifndef
+!
+##set1 defined_with_set1 "defined_with_set1"
+##ifdef defined_with_set1
+! defined defined_with_set1
+##else
+! Error: defined_with_set1 should be defined
+##endif
+!
+##clear
+!
+##ifdef defined_with_set1
+! Error: defined_with_set1 should no longer be define
+##else
+! defined_with_set1 is not defined after ##clear
+##endif

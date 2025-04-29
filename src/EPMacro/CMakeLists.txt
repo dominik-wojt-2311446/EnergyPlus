@@ -27,7 +27,7 @@ if(BUILD_TESTING)
 
   file(MAKE_DIRECTORY ${TEST_DIR})
 
-  set(TESTS simple include definitions "include with space" macro_substitution)
+  set(TESTS simple include definitions "include with space" macro_substitution clear)
 
   foreach(TEST ${TESTS})
     add_test(
