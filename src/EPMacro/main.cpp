@@ -338,6 +338,9 @@ void process_def(const vector_sv::const_iterator begin, const vector_sv::const_i
     state_0.macros[std::string{identifier}] = md;
 }
 
+std::string
+do_substitutions(const vector_sv::const_iterator begin, const vector_sv::const_iterator end, const std::map<std::string, macro_definition> &macros);
+
 /* begin is at '[', returned iterator should be one past ']' */
 std::tuple<std::string, vector_sv::const_iterator> read_arguments_and_substite(const vector_sv::const_iterator begin,
                                                                                const vector_sv::const_iterator end,
@@ -374,15 +377,17 @@ std::tuple<std::string, vector_sv::const_iterator> read_arguments_and_substite(c
     if (current_iter == end || *current_iter != "]") {
         throw std::runtime_error(fmt::format("After reading {} arguments for macro {}, \"]\" was expected", argument_assignment.size(), macro_name));
     }
-    std::string result;
-    for (const std::string token : definition) {
+    vector_sv substituted;
+    for (const std::string_view token : definition) {
         const std::size_t argument_index = std::find(argument_names.begin(), argument_names.end(), token) - argument_names.begin();
         if (argument_index < argument_names.size()) {
-            result += definition[argument_index];
+            substituted.push_back(definition[argument_index]);
         } else {
-            result += token;
+            substituted.push_back(token);
         }
     }
+    /* Process the produced tokens again, until no substitutions can be done. */
+    const std::string result = do_substitutions(substituted.begin(), substituted.end(), macros);
     return {result, std::next(current_iter)};
 }
 
