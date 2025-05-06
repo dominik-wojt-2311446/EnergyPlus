@@ -11,6 +11,8 @@
 # VALGRIND
 # RUN_PERF_STAT
 # PERF
+# RUN_NSYS
+# NSYS
 
 get_filename_component(IDF_NAME "${IDF_FILE}" NAME_WE)
 get_filename_component(IDF_EXT "${IDF_FILE}" EXT)
@@ -55,7 +57,7 @@ if("${EPMACRO_RESULT}" GREATER -1)
                                                                            NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
   else() # windows
     find_program(EPMACRO_EXE EPMacro PATHS "${SOURCE_DIR}/bin/EPMacro/Windows"
-                 NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
+      NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
   endif()
   # Move EPMacro to executable directory
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${EPMACRO_EXE}" "${EXE_PATH}")
@@ -69,7 +71,7 @@ if(BUILD_FORTRAN)
   string(FIND "${IDF_CONTENT}" "Parametric:" PAR_RESULT)
   if("${PAR_RESULT}" GREATER -1)
     find_program(PARAMETRIC_EXE ParametricPreprocessor PATHS "${PRODUCT_PATH}"
-                 NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
+      NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
     execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${IDF_PATH}" "${OUTPUT_DIR_PATH}")
     execute_process(COMMAND "${PARAMETRIC_EXE}" "${IDF_FILE}" WORKING_DIRECTORY "${OUTPUT_DIR_PATH}" COMMAND_ERROR_IS_FATAL ANY)
 
@@ -95,7 +97,7 @@ if(BUILD_FORTRAN)
 
   if("${SLAB_RESULT}" GREATER -1 OR "${BASEMENT_RESULT}" GREATER -1)
     find_program(EXPANDOBJECTS_EXE ExpandObjects PATHS "${BINARY_DIR}/Products/"
-                 NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
+      NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
     message("Executing ExpandObjects from ${EXPANDOBJECTS_EXE}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${IDF_PATH}" "${OUTPUT_DIR_PATH}/in.idf")
     execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${EPW_PATH}" "${OUTPUT_DIR_PATH}/in.epw")
@@ -189,6 +191,13 @@ else()
   set(PERF_STAT_COMMAND "")
 endif()
 
+if(RUN_NSYS)
+  set(NSYS_COMMAND ${NSYS} profile --trace=cuda,nvtx --backtrace=fp --cuda-memory-usage=true --stats=true --force-overwrite=true --output
+                   nsys --)
+else()
+  set(NSYS_COMMAND "")
+endif()
+
 
 if (RUN_CALLGRIND)
   execute_process(
@@ -216,9 +225,23 @@ if (RUN_PERF_STAT)
   endif()
 endif()
 
+if(RUN_NSYS)
+  execute_process(
+    COMMAND ${ECHO_CMD}
+    COMMAND ${NSYS_COMMAND} "${ENERGYPLUS_EXE}" -w "${EPW_PATH}" -d "${OUTPUT_DIR_PATH}" ${ENERGYPLUS_FLAGS_LIST} "${IDF_PATH}"
+    WORKING_DIRECTORY "${OUTPUT_DIR_PATH}"
+    RESULT_VARIABLE RESULT)
+
+  if(NOT RESULT EQUAL 0)
+    message("Test Failed")
+    return()
+  endif()
+endif()
 
 # Run without perf stat or callgrind, if neither is requested
-if (NOT RUN_PERF_STAT AND NOT RUN_CALLGRIND)
+if(NOT RUN_PERF_STAT
+   AND NOT RUN_CALLGRIND
+   AND NOT RUN_NSYS)
   execute_process(
     COMMAND ${ECHO_CMD}
     COMMAND "${ENERGYPLUS_EXE}" -w "${EPW_PATH}" -d "${OUTPUT_DIR_PATH}" ${ENERGYPLUS_FLAGS_LIST} "${IDF_PATH}"
@@ -233,4 +256,3 @@ endif()
 
 # if we get here, then none of the required tests failed
 message("Test Passed")
-

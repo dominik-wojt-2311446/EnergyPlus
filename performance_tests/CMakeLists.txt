@@ -153,3 +153,16 @@ add_simulation_test(
   PERFORMANCE
   COST
   8)
+
+if(NSYS_ANALYZE_PERFORMANCE_TESTS)
+  get_property(LIST_OF_PERFORMANCE_TESTS DIRECTORY . PROPERTY TESTS)
+  set(NSYS_REPORTS)
+  foreach(TEST ${LIST_OF_PERFORMANCE_TESTS})
+    get_property(OUTPUT_DIR_PATH TEST ${TEST} PROPERTY EP_OUTPUT_DIR_PATH)
+    list(APPEND NSYS_REPORTS ${OUTPUT_DIR_PATH}/nsys.nsys-rep)
+  endforeach()
+  add_test(NAME nsys_nvtx_sum
+    COMMAND nsys recipe nvtx_sum --input ${NSYS_REPORTS} --force-overwrite
+            --output nvtx_sum)
+  set_tests_properties(nsys_nvtx_sum PROPERTIES DEPENDS "${LIST_OF_PERFORMANCE_TESTS}")
+endif()
